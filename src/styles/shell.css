@@ -1,0 +1,199 @@
+/* Theatre Window Layout & Shell Components */
+
+.app-container {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+/* Shell Width Ratios */
+.theatre-window {
+  width: 60%;
+  max-width: 860px;
+  min-width: 320px;
+  background: var(--bg-theatre);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-theatre);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  transition: all var(--transition-normal);
+}
+
+@media (max-width: 1024px) {
+  .theatre-window {
+    width: 80%;
+  }
+}
+
+@media (max-width: 640px) {
+  .theatre-window {
+    width: 95%;
+    border-radius: var(--radius-md);
+  }
+}
+
+/* Theatre Header */
+.theatre-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  z-index: 10;
+}
+
+.brand-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.brand-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.brand-title .bengali-title {
+  font-weight: 600;
+  color: var(--color-sindoor);
+}
+
+/* Subtle Journey Progress */
+.journey-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.journey-label {
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.progress-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.progress-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: var(--radius-full);
+  background: var(--border-subtle);
+  transition: all var(--transition-normal);
+}
+
+.progress-dot.active {
+  background: var(--color-gold);
+  box-shadow: 0 0 8px var(--color-gold);
+  transform: scale(1.2);
+}
+
+.progress-dot.completed {
+  background: var(--color-sindoor);
+  box-shadow: 0 0 6px rgba(209, 48, 48, 0.4);
+}
+
+/* Header Controls */
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  background: var(--bg-theatre-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  touch-action: manipulation;
+}
+
+.icon-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--color-gold);
+  background: var(--bg-theatre-accent);
+}
+
+.icon-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Main Theatre Stage Canvas Area */
+.theatre-stage-area {
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--scene-sky-start) 0%, var(--scene-sky-end) 100%);
+}
+
+/* Footer Section */
+.theatre-footer {
+  width: 60%;
+  max-width: 860px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0.5rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 1024px) {
+  .theatre-footer {
+    width: 80%;
+  }
+}
+
+@media (max-width: 640px) {
+  .theatre-footer {
+    width: 95%;
+    flex-direction: column;
+    gap: 0.4rem;
+    text-align: center;
+  }
+}
+
+.visitor-counter {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  background: var(--bg-theatre-card);
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+
+.footer-credit {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}

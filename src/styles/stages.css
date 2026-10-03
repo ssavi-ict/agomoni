@@ -1,0 +1,634 @@
+/* Stage Specific Styles, Elements & Animations */
+
+/* Shared Stage Layout */
+.stage-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  position: relative;
+  min-height: 480px;
+  justify-content: space-between;
+}
+
+@media (max-width: 640px) {
+  .stage-container {
+    padding: 1rem;
+    min-height: 440px;
+  }
+}
+
+.stage-header-block {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.stage-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.stage-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.stage-instruction {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+}
+
+/* Atmospheric Banner / Transition Overlay */
+.stage-banner {
+  background: var(--bg-theatre-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.5rem;
+  text-align: center;
+  margin-top: 1rem;
+  animation: fadeIn 0.5s ease forwards;
+  box-shadow: var(--shadow-glow);
+}
+
+.stage-banner-text {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-sindoor);
+  margin-bottom: 0.25rem;
+}
+
+.stage-banner-sub {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.btn-continue {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1.25rem;
+  background: var(--color-gold);
+  color: #241604;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-continue:hover {
+  background: var(--color-marigold);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 179, 53, 0.4);
+}
+
+/* Stage 1: Mahalaya */
+.mahalaya-room {
+  flex: 1;
+  position: relative;
+  background: radial-gradient(circle at 70% 60%, rgba(30, 24, 40, 0.9) 0%, rgba(10, 8, 15, 0.98) 100%);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 1.5rem;
+  min-height: 280px;
+  overflow: hidden;
+  transition: background 1.2s ease;
+}
+
+.mahalaya-room.illuminated {
+  background: radial-gradient(circle at 65% 55%, rgba(245, 179, 53, 0.25) 0%, rgba(38, 26, 45, 0.95) 70%, rgba(14, 10, 20, 0.98) 100%);
+}
+
+.window-scenery {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  width: 90px;
+  height: 120px;
+  border: 4px solid #4a382d;
+  border-radius: 40px 40px 0 0;
+  background: linear-gradient(180deg, #18233c 0%, #3a3250 60%, #856149 100%);
+  overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+.window-bars {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.window-bar {
+  width: 2px;
+  height: 100%;
+  background: #362920;
+}
+
+.room-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  z-index: 2;
+  user-select: none;
+}
+
+.diya-wrapper {
+  position: relative;
+  padding: 10px;
+  cursor: grab;
+  transition: transform 0.2s ease;
+  touch-action: none;
+}
+
+.diya-wrapper:active {
+  cursor: grabbing;
+}
+
+.diya-flame {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 22px;
+  background: radial-gradient(ellipse at bottom, #fff 0%, #ffeb3b 40%, #ff5722 80%, transparent 100%);
+  border-radius: 50% 50% 20% 20%;
+  animation: flicker 1.2s infinite alternate ease-in-out;
+  box-shadow: 0 0 20px 6px rgba(255, 140, 0, 0.7);
+}
+
+.radio-wrapper {
+  position: relative;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  border: 2px dashed transparent;
+  transition: all 0.3s ease;
+}
+
+.radio-wrapper.drag-over {
+  border-color: var(--color-gold);
+  background: rgba(245, 179, 53, 0.15);
+  box-shadow: 0 0 25px rgba(245, 179, 53, 0.3);
+}
+
+.radio-soundwaves {
+  position: absolute;
+  top: -20px;
+  right: -10px;
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+  height: 24px;
+}
+
+.soundwave-bar {
+  width: 4px;
+  background: var(--color-gold);
+  border-radius: 2px;
+  animation: soundwave 0.8s ease infinite alternate;
+}
+
+.soundwave-bar:nth-child(2) { animation-delay: 0.2s; height: 18px; }
+.soundwave-bar:nth-child(3) { animation-delay: 0.4s; height: 24px; }
+.soundwave-bar:nth-child(4) { animation-delay: 0.1s; height: 12px; }
+
+/* Stage 2: Pratipad (Transport Choices) */
+.transport-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+@media (min-width: 600px) {
+  .transport-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.transport-card {
+  background: var(--bg-theatre-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.2rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-align: center;
+  user-select: none;
+}
+
+.transport-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-gold);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+.transport-card.selected-correct {
+  border-color: var(--color-gold);
+  background: rgba(245, 179, 53, 0.12);
+  box-shadow: var(--shadow-glow);
+}
+
+.transport-card.selected-wrong {
+  border-color: var(--text-muted);
+  opacity: 0.75;
+}
+
+.transport-name {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.transport-bengali {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.feedback-msg {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  min-height: 1.5rem;
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+/* Stage 3: Dwitiya (Deities Reorder) */
+.deities-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.deities-track {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+  overflow-x: auto;
+  padding: 0.5rem 0.2rem;
+}
+
+.deity-slot {
+  flex: 1;
+  max-width: 120px;
+  background: var(--bg-theatre-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 0.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.deity-slot:hover {
+  border-color: var(--color-gold);
+  background: var(--bg-theatre-accent);
+}
+
+.deity-slot.selected {
+  outline: 2px solid var(--color-gold);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-4px);
+}
+
+.deity-slot.locked {
+  border-color: var(--color-sindoor);
+  background: rgba(209, 48, 48, 0.08);
+}
+
+.deity-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.deity-order-badge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  background: var(--border-subtle);
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--radius-full);
+}
+
+.reorder-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* Stage 4: Tritiya (Weapons Puzzle) */
+.weapons-board {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+
+.weapon-arcs-wrapper {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .weapon-arcs-wrapper {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+.weapon-arc {
+  background: var(--bg-theatre-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.arc-header {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  text-align: center;
+  font-weight: 600;
+}
+
+.weapon-slots-row {
+  display: flex;
+  justify-content: space-around;
+  gap: 0.35rem;
+}
+
+.weapon-slot {
+  width: 44px;
+  height: 52px;
+  background: var(--bg-theatre);
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.weapon-slot.missing {
+  border-color: var(--color-gold);
+  background: rgba(245, 179, 53, 0.08);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-gold);
+}
+
+.weapon-slot.solved {
+  border-color: var(--color-sindoor);
+  border-style: solid;
+  background: rgba(209, 48, 48, 0.1);
+}
+
+.weapon-slot-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.weapon-chips-pool {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  max-width: 580px;
+}
+
+.weapon-chip {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.4rem 0.65rem;
+  background: var(--bg-theatre-accent);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.weapon-chip:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+  transform: translateY(-2px);
+}
+
+.weapon-chip.selected {
+  background: var(--color-gold);
+  color: #241604;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 10px rgba(245, 179, 53, 0.5);
+}
+
+.weapon-chip.used {
+  opacity: 0.35;
+  pointer-events: none;
+  border-style: dashed;
+}
+
+/* Stage 5: Chaturthi (Start the Puja) */
+.puja-altar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: var(--bg-theatre-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 2rem 1rem;
+  margin: 1rem 0;
+  min-height: 200px;
+}
+
+.puja-item-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  user-select: none;
+}
+
+.puja-item-card:hover {
+  transform: translateY(-4px);
+  background: var(--bg-theatre-accent);
+}
+
+.puja-item-card.activated {
+  box-shadow: var(--shadow-glow);
+  transform: scale(1.05);
+}
+
+.puja-item-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.puja-item-bengali {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* Stage 6: Panchami / Bodhan Reveal */
+.bodhan-theatre {
+  flex: 1;
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 45%, #251b32 0%, #0d0a14 100%);
+  border: 1px solid var(--border-subtle);
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.durga-artwork-container {
+  position: relative;
+  width: 220px;
+  height: 240px;
+  margin: 0 auto;
+}
+
+.durga-aura {
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245, 179, 53, 0.4) 0%, rgba(209, 48, 48, 0.15) 50%, transparent 70%);
+  opacity: 0;
+  transition: opacity 1.8s ease;
+  pointer-events: none;
+}
+
+.durga-aura.visible {
+  opacity: 1;
+  animation: pulseAura 3s infinite alternate ease-in-out;
+}
+
+.durga-svg {
+  width: 100%;
+  height: 100%;
+  transition: opacity 1.5s ease, transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  opacity: 0;
+  transform: scale(0.92);
+}
+
+.durga-svg.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.final-card {
+  margin-top: 1rem;
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  max-width: 480px;
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.final-heading {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--color-sindoor);
+  margin-bottom: 0.5rem;
+}
+
+.final-prose {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  white-space: pre-line;
+}
+
+.btn-restart {
+  margin-top: 1.25rem;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.85rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+}
+
+.btn-restart:hover {
+  color: var(--text-primary);
+  border-color: var(--color-gold);
+  background: var(--bg-theatre-accent);
+}
+
+/* Keyframe Animations */
+@keyframes flicker {
+  0% { transform: translateX(-50%) scale(1); opacity: 0.9; }
+  50% { transform: translateX(-48%) scale(1.08, 0.96); opacity: 1; }
+  100% { transform: translateX(-52%) scale(0.95, 1.05); opacity: 0.85; }
+}
+
+@keyframes soundwave {
+  0% { height: 6px; }
+  100% { height: 22px; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseAura {
+  from { transform: scale(0.96); opacity: 0.8; }
+  to { transform: scale(1.06); opacity: 1; }
+}

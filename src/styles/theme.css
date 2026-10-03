@@ -1,0 +1,70 @@
+/* Design Tokens & Theme Palettes for Agomoni */
+
+:root {
+  --font-display: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+
+  /* Festive Accent Palette */
+  --color-gold: #f5b335;
+  --color-gold-glow: rgba(245, 179, 53, 0.4);
+  --color-marigold: #ff8c00;
+  --color-sindoor: #d13030;
+  --color-sindoor-dark: #961717;
+  --color-altar: #4a1515;
+  --color-shiuli: #fff8eb;
+  --color-shiuli-orange: #ff5722;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-slow: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Light Theme (Autumn Dawn / শরৎ সকাল) */
+:root[data-theme="light"] {
+  --bg-app: #fbf7ee;
+  --bg-theatre: #ffffff;
+  --bg-theatre-card: #f8f3e8;
+  --bg-theatre-accent: #f0e6d2;
+  --bg-glass: rgba(255, 255, 255, 0.75);
+  --border-subtle: #e6dac6;
+  --border-focus: #f5b335;
+
+  --text-primary: #2d241e;
+  --text-secondary: #6e5f52;
+  --text-muted: #998777;
+  --text-highlight: #b73229;
+
+  --shadow-theatre: 0 16px 40px -10px rgba(78, 48, 22, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-glow: 0 0 24px rgba(245, 179, 53, 0.35);
+
+  --scene-sky-start: #fffaee;
+  --scene-sky-end: #faeed4;
+}
+
+/* Night / Festive Evening Theme (সন্ধ্যা আরতি / মহালয়ার ভোর) */
+:root[data-theme="dark"] {
+  --bg-app: #0e0d13;
+  --bg-theatre: #171520;
+  --bg-theatre-card: #201d2c;
+  --bg-theatre-accent: #2c273d;
+  --bg-glass: rgba(23, 21, 32, 0.82);
+  --border-subtle: #332e47;
+  --border-focus: #f5b335;
+
+  --text-primary: #fcf9f2;
+  --text-secondary: #c0b7aa;
+  --text-muted: #80766a;
+  --text-highlight: #ffbe53;
+
+  --shadow-theatre: 0 24px 60px -15px rgba(0, 0, 0, 0.7), 0 0 1px 1px rgba(255, 255, 255, 0.05);
+  --shadow-glow: 0 0 32px rgba(245, 179, 53, 0.28);
+
+  --scene-sky-start: #14121d;
+  --scene-sky-end: #201a2c;
+}

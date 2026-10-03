@@ -1,0 +1,186 @@
+// Stage 5: Shukla Chaturthi ("Start the Puja")
+import { gameState } from '../state/gameState.js';
+import { audioManager } from '../audio/audioManager.js';
+import { svgIcons } from '../assets/svgIcons.js';
+
+export function createChaturthiStage() {
+  const container = document.createElement('div');
+  container.className = 'stage-container';
+
+  // Header — MUST be titled exactly "Start the Puja"
+  const header = document.createElement('div');
+  header.className = 'stage-header-block';
+  header.innerHTML = `
+    <h2 class="stage-title">Start the Puja</h2>
+    <p class="stage-subtitle">শুক্লা চতুর্থী</p>
+    <p class="stage-instruction">বেদী সাজিয়ে মঙ্গলধ্বনি দিয়ে বোধনের শুভলগ্ন রচনা করুন</p>
+  `;
+
+  // Altar showing 3 items
+  const altar = document.createElement('div');
+  altar.className = 'puja-altar';
+
+  // 1. Diya
+  const diyaCard = document.createElement('div');
+  diyaCard.className = 'puja-item-card';
+  diyaCard.id = 'puja-diya';
+  diyaCard.setAttribute('role', 'button');
+  diyaCard.setAttribute('tabindex', '0');
+  diyaCard.setAttribute('aria-label', 'Light the Sacred Diya');
+  diyaCard.innerHTML = `
+    <div style="position: relative;">
+      <div class="diya-flame" style="opacity: 0; transition: opacity 0.4s ease;" id="chaturthi-flame"></div>
+      ${svgIcons.diya}
+    </div>
+    <span class="puja-item-title">Diya</span>
+    <span class="puja-item-bengali">মঙ্গল প্রদীপ</span>
+  `;
+
+  // 2. Dhak
+  const dhakCard = document.createElement('div');
+  dhakCard.className = 'puja-item-card';
+  dhakCard.id = 'puja-dhak';
+  dhakCard.setAttribute('role', 'button');
+  dhakCard.setAttribute('tabindex', '0');
+  dhakCard.setAttribute('aria-label', 'Sound the Festive Dhak');
+  dhakCard.innerHTML = `
+    <div id="dhak-graphic-container">
+      ${svgIcons.dhak}
+    </div>
+    <span class="puja-item-title">Dhak</span>
+    <span class="puja-item-bengali">শ্রীঢাক</span>
+  `;
+
+  // 3. Conch
+  const conchCard = document.createElement('div');
+  conchCard.className = 'puja-item-card';
+  conchCard.id = 'puja-conch';
+  conchCard.setAttribute('role', 'button');
+  conchCard.setAttribute('tabindex', '0');
+  conchCard.setAttribute('aria-label', 'Blow the Sacred Conch (Shankha)');
+  conchCard.innerHTML = `
+    <div id="conch-graphic-container">
+      ${svgIcons.conch}
+    </div>
+    <span class="puja-item-title">Conch</span>
+    <span class="puja-item-bengali">মঙ্গল শঙ্খ</span>
+  `;
+
+  altar.appendChild(diyaCard);
+  altar.appendChild(dhakCard);
+  altar.appendChild(conchCard);
+
+  const feedbackArea = document.createElement('div');
+  feedbackArea.className = 'feedback-msg';
+  feedbackArea.id = 'chaturthi-feedback';
+
+  const actionArea = document.createElement('div');
+  actionArea.id = 'stage5-action-area';
+
+  container.appendChild(header);
+  container.appendChild(altar);
+  container.appendChild(feedbackArea);
+  container.appendChild(actionArea);
+
+  // Correct sequence discovery: Diya (step 0) -> Dhak (step 1) -> Conch (step 2)
+  let currentStep = 0;
+  let isCompleted = false;
+
+  function onComplete() {
+    if (isCompleted) return;
+    isCompleted = true;
+
+    feedbackArea.textContent = 'মণ্ডপ আনন্দ ও ভক্তিতে ভরে উঠেছে...';
+    altar.style.boxShadow = 'var(--shadow-glow)';
+
+    gameState.completeStage(5);
+
+    actionArea.innerHTML = `
+      <div class="stage-banner">
+        <p class="stage-banner-text">সব প্রস্তুত...</p>
+        <p class="stage-banner-sub">মা, এবার এসো।</p>
+        <button class="btn-continue" id="stage5-continue-btn">
+          <span>পরের ধাপ</span>
+          ${svgIcons.arrowRight}
+        </button>
+      </div>
+    `;
+
+    actionArea.querySelector('#stage5-continue-btn').addEventListener('click', () => {
+      gameState.nextStage();
+    });
+  }
+
+  // Diya interaction
+  diyaCard.addEventListener('click', () => {
+    if (isCompleted) return;
+    const flame = diyaCard.querySelector('#chaturthi-flame');
+    if (flame) flame.style.opacity = '1';
+    diyaCard.classList.add('activated');
+
+    if (currentStep === 0) {
+      currentStep = 1;
+      feedbackArea.textContent = 'প্রদীপের আলোয় বেদী আলোকিত হলো...';
+    } else {
+      // Re-lighting if already done or out of turn
+      feedbackArea.textContent = 'প্রদীপ প্রজ্বলিত।';
+    }
+  });
+
+  // Dhak interaction
+  dhakCard.addEventListener('click', () => {
+    if (isCompleted) return;
+    // Play dhak sound and animate drum shake
+    audioManager.playDhak();
+    dhakCard.classList.add('activated');
+    const graphic = dhakCard.querySelector('#dhak-graphic-container');
+    if (graphic) {
+      graphic.style.transform = 'scale(1.1) rotate(4deg)';
+      setTimeout(() => { graphic.style.transform = 'scale(1) rotate(0deg)'; }, 400);
+    }
+
+    if (currentStep === 1) {
+      currentStep = 2;
+      feedbackArea.textContent = 'ঢাকের বোলে বাতাসে আগমনীর শিহরণ...';
+    } else if (currentStep === 0) {
+      feedbackArea.textContent = 'পূজার সূচনায় প্রথমে মঙ্গলদীপের পবিত্র আলো প্রয়োজন...';
+    }
+  });
+
+  // Conch interaction
+  conchCard.addEventListener('click', () => {
+    if (isCompleted) return;
+    // Play conch sound and gentle pulse
+    audioManager.playConch();
+    conchCard.classList.add('activated');
+    const graphic = conchCard.querySelector('#conch-graphic-container');
+    if (graphic) {
+      graphic.style.transform = 'scale(1.15)';
+      setTimeout(() => { graphic.style.transform = 'scale(1)'; }, 600);
+    }
+
+    if (currentStep === 2) {
+      feedbackArea.textContent = 'পবিত্র শঙ্খধ্বনিতে ত্রিভুবন মঙ্গলময় হলো!';
+      onComplete();
+    } else if (currentStep === 0) {
+      feedbackArea.textContent = 'প্রথমে মণ্ডপে মঙ্গলপ্রদীপ প্রজ্জ্বলন করুন...';
+    } else if (currentStep === 1) {
+      feedbackArea.textContent = 'শঙ্খের পূর্বে ঢাকের মঙ্গলবাদন ধ্বনিত হোক...';
+    }
+  });
+
+  // Check if stage 5 already completed in state
+  const { completedStages } = gameState.getState();
+  if (completedStages.includes(5)) {
+    const flame = diyaCard.querySelector('#chaturthi-flame');
+    if (flame) flame.style.opacity = '1';
+    diyaCard.classList.add('activated');
+    dhakCard.classList.add('activated');
+    conchCard.classList.add('activated');
+    setTimeout(() => {
+      onComplete();
+    }, 100);
+  }
+
+  return container;
+}
