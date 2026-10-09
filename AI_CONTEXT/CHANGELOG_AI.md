@@ -1,3 +1,12 @@
+## 2026-10-09 — Live Visitor Counter Updates
+- **What changed:**
+  - Added a Firebase Realtime Database value subscription for the visitor counter.
+  - Updated the counter component to remain synchronized with count changes from other page loads.
+  - Added a fallback subscription test for builds without Firebase configuration.
+- **Files/components affected:** `src/services/visitorCounterService.js`, `src/components/VisitorCounter.js`, `tests/game.test.js`, `AI_CONTEXT/CURRENT_STATE.md`, `AI_CONTEXT/TODO.md`, `AI_CONTEXT/CHANGELOG_AI.md`.
+- **Known issues:** Live updates require a valid Firebase database URL and database rules permitting reads as well as counter transactions.
+- **Next relevant task:** Deploy and verify that the counter changes when another visitor loads the site.
+
 ## 2026-10-09 — Count Stage Module Loads
 - **What changed:**
   - Each of the six stage modules records an atomic visitor-counter increment at module evaluation.

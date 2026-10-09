@@ -15,7 +15,7 @@
 - **Audio System:** Centralized `AudioManager` with mute toggle and resilient Web Audio procedural synthesis fallbacks.
 - **Theme:** Atmospheric Night Mode toggle with `prefers-color-scheme` support and `localStorage` persistence.
 - **State & Storage:** `agomoni-game-state` persisted to `localStorage` (currentStage, completedStages, theme, muted). Strictly completion-based.
-- **Visitor Counter:** Each of the six stage modules records an atomic Firebase Realtime Database increment when its module loads. Since all six are statically imported, a full page load increments the shared count six times. The footer reads the count after those requests finish; missing/invalid configuration or Firebase access errors fall back to `000000`.
+- **Visitor Counter:** Each of the six stage modules records an atomic Firebase Realtime Database increment when its module loads. Since all six are statically imported, a full page load increments the shared count six times. The footer subscribes to Realtime Database updates so the displayed total changes live; missing/invalid configuration or Firebase access errors fall back to `000000`.
 - **Deployment:** GitHub Pages workflow `.github/workflows/deploy.yml` and relative base path.
 
 ## Latest Meaningful Changes

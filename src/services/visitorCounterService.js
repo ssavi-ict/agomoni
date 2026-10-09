@@ -115,6 +115,40 @@ export class FirebaseVisitorCounterService extends VisitorCounterService {
       return '000000';
     }
   }
+
+  async subscribeVisitorCount(onCount, onError = () => {}) {
+    if (!firebaseConfig.databaseURL) {
+      if (!missingConfigReported) {
+        console.error('Firebase visitor counter is disabled: configure VITE_FIREBASE_DATABASE_URL in the deployment environment.');
+        missingConfigReported = true;
+      }
+      onCount('000000');
+      return () => {};
+    }
+
+    if (!hasValidDatabaseUrl(firebaseConfig.databaseURL)) {
+      if (!missingConfigReported) {
+        console.error('Firebase visitor counter is disabled: VITE_FIREBASE_DATABASE_URL must be a valid Firebase Realtime Database URL.');
+        missingConfigReported = true;
+      }
+      onCount('000000');
+      return () => {};
+    }
+
+    await Promise.all(stageLoadRequests);
+    const { database, ref, onValue } = await getFirebaseServices();
+    return onValue(
+      ref(database, `games/${this.gameId}/visitor_count`),
+      snapshot => {
+        const count = snapshot.val();
+        onCount(String(typeof count === 'number' && Number.isFinite(count) ? count : 0).padStart(6, '0'));
+      },
+      error => {
+        console.error('Firebase visitor counter subscription error:', error);
+        onError(error);
+      }
+    );
+  }
 }
 
 // Export instance pointing directly to agomoni26

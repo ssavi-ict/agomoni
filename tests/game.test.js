@@ -69,6 +69,12 @@ visitorCounterService.recordStageLoad = recordStageLoad;
 const countStr = await visitorCounterService.getVisitorCount();
 assert.match(countStr, /^\d{6}$/, 'Visitor counter must format as 6 digits with leading zeros (e.g. 000000)');
 assert.strictEqual(countStr, '000000', 'Visitor counter should use its fallback when Firebase is not configured');
+let subscribedCount;
+const unsubscribe = await visitorCounterService.subscribeVisitorCount(count => {
+  subscribedCount = count;
+});
+assert.strictEqual(subscribedCount, '000000', 'Visitor counter subscription should report its fallback when Firebase is not configured');
+assert.strictEqual(typeof unsubscribe, 'function', 'Visitor counter subscription should return an unsubscribe function');
 console.log(`✓ Visitor Counter returned: ${countStr}`);
 
 // 3. Test Audio Manager
