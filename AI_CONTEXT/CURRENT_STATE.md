@@ -19,6 +19,8 @@
 - **Deployment:** GitHub Pages workflow `.github/workflows/deploy.yml` and relative base path.
 
 ## Latest Meaningful Changes
+- Refined footer credit typography with a modestly larger display font and theme-aware link styling.
+- Styled the Stage 6 credit links with theme-aware colors so they remain readable in dark mode.
 - Integrated downloaded high-resolution images in `public/assets/images/`:
   - Stage 2: horse, elephant, palanquin, boat.
   - Stage 3: Lord Ganesha, Ma Lokkhi, Ma Durga, Ma Saraswati, Lord Kartikey.

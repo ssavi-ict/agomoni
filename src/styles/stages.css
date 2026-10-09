@@ -976,6 +976,15 @@ button#again:hover {
   white-space: pre-line;
 }
 
+.final-credits a {
+  color: var(--text-highlight);
+}
+
+.final-credits a:hover,
+.final-credits a:focus-visible {
+  color: var(--color-gold);
+}
+
 .btn-restart {
   margin-top: 1.25rem;
   padding: 0.5rem 1.2rem;

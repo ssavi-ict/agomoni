@@ -24,6 +24,8 @@
 - [x] Implement theatre window layout (desktop 60%, tablet 75–85%, mobile 90–95%).
 - [x] Subtle journey progress indicator (`Maa's Journey ● ● ○`).
 - [x] Night mode toggle honoring `prefers-color-scheme`.
+- [x] Keep Stage 6 credit links readable in light and dark themes.
+- [x] Style footer credit text with accessible, theme-aware typography.
 - [x] Visitor counter abstraction with placeholder implementation.
 - [x] GitHub Pages workflow (`.github/workflows/deploy.yml`) builds from `main` and publishes static output to the `deploy` branch.
 
