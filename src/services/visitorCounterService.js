@@ -25,7 +25,7 @@ function hasValidDatabaseUrl(value) {
 
 let firebaseServicesPromise;
 let missingConfigReported = false;
-const stageLoadRequests = [];
+const pendingStageLoadRequests = new Set();
 
 function getFirebaseServices() {
   if (!firebaseServicesPromise) {
@@ -94,12 +94,13 @@ export class FirebaseVisitorCounterService extends VisitorCounterService {
 
   recordStageLoad() {
     const request = this.incrementVisitorCount();
-    stageLoadRequests.push(request);
+    pendingStageLoadRequests.add(request);
+    request.finally(() => pendingStageLoadRequests.delete(request));
     return request;
   }
 
   async getVisitorCount() {
-    await Promise.all(stageLoadRequests);
+    await Promise.all(pendingStageLoadRequests);
 
     if (!firebaseConfig.databaseURL || !hasValidDatabaseUrl(firebaseConfig.databaseURL)) {
       return '000000';
@@ -135,7 +136,7 @@ export class FirebaseVisitorCounterService extends VisitorCounterService {
       return () => {};
     }
 
-    await Promise.all(stageLoadRequests);
+    await Promise.all(pendingStageLoadRequests);
     const { database, ref, onValue } = await getFirebaseServices();
     return onValue(
       ref(database, `games/${this.gameId}/visitor_count`),

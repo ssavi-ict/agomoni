@@ -28,6 +28,6 @@
 - [x] GitHub Pages workflow (`.github/workflows/deploy.yml`) builds from `main` and publishes static output to the `deploy` branch.
 
 ## P1 (Future Enhancements)
-- Ensure GitHub Actions has the Firebase Realtime Database URL and related `VITE_FIREBASE_*` configuration, and confirm Realtime Database rules permit six counter transactions per page load and live reads at `games/agomoni26/visitor_count`.
+- Ensure GitHub Actions has the Firebase Realtime Database URL and related `VITE_FIREBASE_*` configuration, and confirm Realtime Database rules permit counter transactions for each entered stage and live reads at `games/agomoni26/visitor_count`.
 - Provide custom studio-recorded MP3 files in `public/assets/audio/` if licensed.
 - Configure GitHub Pages in repository settings to publish from `deploy` / root and verify the live site.

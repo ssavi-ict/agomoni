@@ -2,9 +2,6 @@
 import { gameState } from '../state/gameState.js';
 import { audioManager } from '../audio/audioManager.js';
 import { svgIcons } from '../assets/svgIcons.js';
-import { visitorCounterService } from '../services/visitorCounterService.js';
-
-visitorCounterService.recordStageLoad();
 
 const basePath = (import.meta.env && import.meta.env.BASE_URL) ? import.meta.env.BASE_URL : './';
 const prefix = basePath.endsWith('/') ? basePath : basePath + '/';

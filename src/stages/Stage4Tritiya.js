@@ -1,9 +1,6 @@
 // Stage 4: Shukla Tritiya (শুক্লা তৃতীয়া — Weaponize Ma Durga)
 import { gameState } from '../state/gameState.js';
 import { svgIcons } from '../assets/svgIcons.js';
-import { visitorCounterService } from '../services/visitorCounterService.js';
-
-visitorCounterService.recordStageLoad();
 
 export function createTritiyaStage() {
   const container = document.createElement('div');

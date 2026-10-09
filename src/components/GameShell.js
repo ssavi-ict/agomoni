@@ -9,6 +9,7 @@ import { createDwitiyaStage } from '../stages/Stage3Dwitiya.js';
 import { createTritiyaStage } from '../stages/Stage4Tritiya.js';
 import { createChaturthiStage } from '../stages/Stage5Chaturthi.js';
 import { createPanchamiStage } from '../stages/Stage6Panchami.js';
+import { visitorCounterService } from '../services/visitorCounterService.js';
 
 export function createGameShell() {
   const container = document.createElement('div');
@@ -39,6 +40,7 @@ export function createGameShell() {
 
   function mountStage(stageNode) {
     if (!stageNode) return;
+    visitorCounterService.recordStageLoad();
     stageNode.style.animation = 'fadeIn 0.4s ease forwards';
     stageArea.appendChild(stageNode);
   }

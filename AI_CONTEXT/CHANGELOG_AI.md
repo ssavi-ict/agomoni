@@ -1,3 +1,12 @@
+## 2026-10-09 — Count Actual Stage Entries
+- **What changed:**
+  - Moved counter increments from static stage-module imports to stage mounting in `GameShell`, so advancing from Stage 1 to Stage 2 increments the count.
+  - Kept the Realtime Database subscription for live cross-tab/visitor updates.
+  - Track only pending increment requests while waiting for the latest count, avoiding retention of every completed request.
+- **Files/components affected:** `src/components/GameShell.js`, `src/services/visitorCounterService.js`, all six `src/stages/Stage*.js` modules, `tests/game.test.js`, `AI_CONTEXT/CURRENT_STATE.md`, `AI_CONTEXT/TODO.md`, `AI_CONTEXT/CHANGELOG_AI.md`.
+- **Known issues:** Live counts still require Firebase deployment configuration and permissions for reads and transactions at `games/agomoni26/visitor_count`.
+- **Next relevant task:** Deploy and verify that each stage entry updates the visible counter.
+
 ## 2026-10-09 — Live Visitor Counter Updates
 - **What changed:**
   - Added a Firebase Realtime Database value subscription for the visitor counter.

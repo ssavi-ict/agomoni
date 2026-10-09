@@ -3,9 +3,6 @@
 import { gameState } from '../state/gameState.js';
 import { audioManager } from '../audio/audioManager.js';
 import { svgIcons } from '../assets/svgIcons.js';
-import { visitorCounterService } from '../services/visitorCounterService.js';
-
-visitorCounterService.recordStageLoad();
 
 const FREQ_MIN = 88.0;
 const FREQ_MAX = 108.0;
