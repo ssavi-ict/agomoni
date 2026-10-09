@@ -7,7 +7,7 @@ export function createFooter() {
 
   const leftText = document.createElement('div');
   leftText.className = 'footer-credit';
-  leftText.innerHTML = `<span>Agomoni - by Avik Sarkar</span>`;
+  leftText.innerHTML = `<span class="footer-credit-line"><span class="footer-credit-title">Agomoni</span><span class="footer-credit-byline">by</span><a href="https://www.facebook.com/ssavi.cou" target="_blank" rel="noopener noreferrer">Avik Sarkar</a></span>`;
 
   const rightCounter = createVisitorCounter();
 

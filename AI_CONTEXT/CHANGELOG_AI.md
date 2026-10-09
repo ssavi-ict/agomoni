@@ -1,3 +1,15 @@
+## 2026-10-09 — Footer Credit Typography
+- **What changed:** Styled the footer credit with a slightly larger display font, clear project/author hierarchy, and theme-aware link colors.
+- **Files/components affected:** `src/components/Footer.js`, `src/styles/shell.css`, `AI_CONTEXT/CURRENT_STATE.md`, `AI_CONTEXT/TODO.md`, `AI_CONTEXT/CHANGELOG_AI.md`.
+- **Known issues:** None.
+- **Next relevant task:** None.
+
+## 2026-10-09 — Stage 6 Credit Link Contrast
+- **What changed:** Applied theme-aware link colors to the Stage 6 credit links so they remain legible in dark mode.
+- **Files/components affected:** `src/stages/Stage6Panchami.js`, `src/styles/stages.css`, `AI_CONTEXT/CURRENT_STATE.md`, `AI_CONTEXT/TODO.md`, `AI_CONTEXT/CHANGELOG_AI.md`.
+- **Known issues:** None.
+- **Next relevant task:** None.
+
 ## 2026-10-09 — Count Actual Stage Entries
 - **What changed:**
   - Moved counter increments from static stage-module imports to stage mounting in `GameShell`, so advancing from Stage 1 to Stage 2 increments the count.

@@ -148,7 +148,7 @@ export function createPanchamiStage() {
             <span>আরেকবার হবে নাকি (Restart)</span>
           </button>
           <hr style="width: 50%; margin: 1rem auto; border-color: var(--border-focus);">
-          <p style="font-size: 0.80rem; font-style: italic;">কৃতজ্ঞতা: <a href="https://www.youtube.com/watch?v=YQyo8QeoYhc">মহালয়া, বীরেন্দ্র কৃষ্ণ ভদ্র</a> | <a href="https://www.youtube.com/watch?v=J_NGbPOsNhI">চন্ডীমঙ্গল, গপ্পো মীরের ঠেক</a></p>
+          <p class="final-credits" style="font-size: 0.80rem; font-style: italic;">নমস্কার: <a href="https://www.youtube.com/watch?v=YQyo8QeoYhc">মহালয়া, বীরেন্দ্র কৃষ্ণ ভদ্র</a> | <a href="https://www.youtube.com/watch?v=J_NGbPOsNhI">চন্ডীমঙ্গল, গপ্পো মীরের ঠেক</a></p>
         </div>
       `;
 
