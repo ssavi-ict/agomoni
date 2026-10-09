@@ -1,43 +1,57 @@
-// Visitor Counter Service Abstraction
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getDatabase, ref, get, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCkFXJ-2nankK4Bib1doqaFcHmweZnNaqk",
+  authDomain: "cracktech-ext.firebaseapp.com",
+  databaseURL: "https://cracktech-ext-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "cracktech-ext",
+  storageBucket: "cracktech-ext.firebasestorage.app",
+  messagingSenderId: "259670715226",
+  appId: "1:259670715226:web:bd19df5311b8eb61f12163",
+  measurementId: "G-ZS662YT2YD"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
 export class VisitorCounterService {
-  /**
-   * Retrieves the current visitor count formatted as a zero-padded string.
-   * @returns {Promise<string>}
-   */
   async getVisitorCount() {
     throw new Error('getVisitorCount() must be implemented by concrete provider');
   }
 }
 
-/**
- * Placeholder implementation of VisitorCounterService.
- * Does not make external network requests and does not use Firebase credentials.
- * Future Firebase / cloud function implementation can replace this seamlessly.
- */
-export class PlaceholderVisitorCounterService extends VisitorCounterService {
-  constructor(initialCount = 108) {
+export class FirebaseVisitorCounterService extends VisitorCounterService {
+  constructor(gameId = 'agomoni26') {
     super();
-    this.initialCount = initialCount;
+    // Dynamically targets games/agomoni26/visitor_count
+    this.counterRef = ref(db, `games/${gameId}/visitor_count`);
+    this.sessionKey = `visited_${gameId}`;
   }
 
   async getVisitorCount() {
-    // Standard 6-digit zero padded format: "000000"
-    // Using a subtle local offset for a warm, alive feeling without fake network calls
     try {
-      let count = this.initialCount;
-      const stored = localStorage.getItem('agomoni-visitor-placeholder');
-      if (stored) {
-        count = parseInt(stored, 10);
+      const hasVisited = sessionStorage.getItem(this.sessionKey);
+
+      if (!hasVisited) {
+        const transactionResult = await runTransaction(this.counterRef, (currentCount) => {
+          return (currentCount || 0) + 1;
+        });
+
+        sessionStorage.setItem(this.sessionKey, 'true');
+        const count = transactionResult.snapshot.val();
+        return String(count).padStart(6, '0');
       } else {
-        localStorage.setItem('agomoni-visitor-placeholder', count.toString());
+        const snapshot = await get(this.counterRef);
+        const count = snapshot.exists() ? snapshot.val() : 0;
+        return String(count).padStart(6, '0');
       }
-      return String(count).padStart(6, '0');
-    } catch (e) {
-      return String(this.initialCount).padStart(6, '0');
+    } catch (error) {
+      console.error('Firebase visitor counter error:', error);
+      return '000000';
     }
   }
 }
 
-// Default export instance used by UI components
-export const visitorCounterService = new PlaceholderVisitorCounterService(1284);
+// Export instance pointing directly to agomoni26
+export const visitorCounterService = new FirebaseVisitorCounterService('agomoni26');

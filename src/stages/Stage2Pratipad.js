@@ -2,11 +2,14 @@
 import { gameState } from '../state/gameState.js';
 import { svgIcons } from '../assets/svgIcons.js';
 
+const basePath = (import.meta.env && import.meta.env.BASE_URL) ? import.meta.env.BASE_URL : './';
+const prefix = basePath.endsWith('/') ? basePath : basePath + '/';
+
 const TRANSPORTS = [
-  { id: 'palanquin', name: 'Palanquin', bengali: 'পালকি', icon: svgIcons.palanquin },
-  { id: 'horse', name: 'Horse', bengali: 'ঘোড়া', icon: svgIcons.horse, isCorrect: true },
-  { id: 'elephant', name: 'Elephant', bengali: 'হাতি', icon: svgIcons.elephant },
-  { id: 'boat', name: 'Boat', bengali: 'নৌকা', icon: svgIcons.boat }
+  { id: 'palanquin', name: 'Palanquin', bengali: 'পালকি', image: `${prefix}assets/images/palanquin.png` },
+  { id: 'horse', name: 'Horse', bengali: 'ঘোড়া', image: `${prefix}assets/images/horse.png`, isCorrect: true },
+  { id: 'elephant', name: 'Elephant', bengali: 'হাতি', image: `${prefix}assets/images/elephant.png` },
+  { id: 'boat', name: 'Boat', bengali: 'নৌকা', image: `${prefix}assets/images/boat.png` }
 ];
 
 export function createPratipadStage() {
@@ -17,9 +20,9 @@ export function createPratipadStage() {
   const header = document.createElement('div');
   header.className = 'stage-header-block';
   header.innerHTML = `
-    <h2 class="stage-title">শুক্লা প্রতিপদ</h2>
-    <p class="stage-subtitle">মাকে নিয়ে আসা</p>
-    <p class="stage-instruction">মা কোন বাহনে কৈলাস থেকে মর্ত্যে যাত্রা শুরু করবেন?</p>
+    <h3 class="stage-title">১৪৩২ বঙ্গাব্দ</h3>
+    <br/>
+    <p class="stage-instruction">মায়ের মর্ত্যগামী বাহন প্রস্তুত ... <u>লাগাম টা টেনে ধরলেই</u> চলতে শুরু করবে</p>
   `;
 
   // Grid of 4 transports
@@ -47,7 +50,7 @@ export function createPratipadStage() {
     card.setAttribute('role', 'button');
     card.setAttribute('aria-label', `Select ${item.name} (${item.bengali})`);
     card.innerHTML = `
-      ${item.icon}
+      <img src="${item.image}" alt="${item.name}" class="transport-img" />
       <span class="transport-name">${item.name}</span>
       <span class="transport-bengali">${item.bengali}</span>
     `;
@@ -62,28 +65,28 @@ export function createPratipadStage() {
         feedbackArea.textContent = 'ঘোড়সওয়ার মা ধাবমান আলোর মতো এগিয়ে আসছেন...';
 
         // Animate horse galloping forward
-        const horseSvg = card.querySelector('svg');
-        if (horseSvg) {
-          horseSvg.style.transition = 'transform 0.8s ease-in-out';
-          horseSvg.style.transform = 'translateX(14px) scale(1.1)';
+        const horseImg = card.querySelector('.transport-img');
+        if (horseImg) {
+          horseImg.style.transition = 'transform 0.8s ease-in-out';
+          horseImg.style.transform = 'translateX(14px) scale(1.12)';
         }
 
         gameState.completeStage(2);
+        setTimeout(() => {
+          actionArea.innerHTML = `
+            <div class="stage-banner">
+              <p class="stage-banner-text">ছত্র ভঙ্গ স্তুরঙ্গমে</p>
+              <p class="stage-banner-sub">অশ্বারোহী মা ... আপনাকে সামনের দিনগুলোতে নিজ এবং প্রিয়জনদের প্রতি যত্নশীল হবার পরামর্শ দিচ্ছেন</p>
+              <button class="btn-continue" id="stage2-continue-btn">
+                ${svgIcons.arrowRight}
+              </button>
+            </div>
+          `;
 
-        actionArea.innerHTML = `
-          <div class="stage-banner">
-            <p class="stage-banner-text">মায়ের যাত্রা শুরু হয়েছে।</p>
-            <p class="stage-banner-sub">মা আরও একটু কাছে...</p>
-            <button class="btn-continue" id="stage2-continue-btn">
-              <span>পরের ধাপ</span>
-              ${svgIcons.arrowRight}
-            </button>
-          </div>
-        `;
-
-        actionArea.querySelector('#stage2-continue-btn').addEventListener('click', () => {
-          gameState.nextStage();
-        });
+          actionArea.querySelector('#stage2-continue-btn').addEventListener('click', () => {
+            gameState.nextStage();
+          });
+        }, 2000);
       } else {
         // Gentle, respectful Bengali feedback. No harsh punishments.
         card.classList.add('selected-wrong');

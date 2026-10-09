@@ -2,12 +2,15 @@
 import { gameState } from '../state/gameState.js';
 import { svgIcons } from '../assets/svgIcons.js';
 
+const basePath = (import.meta.env && import.meta.env.BASE_URL) ? import.meta.env.BASE_URL : './';
+const prefix = basePath.endsWith('/') ? basePath : basePath + '/';
+
 const DEITIES = [
-  { id: 'ganesha', name: 'Ganesha', bengali: 'গণেশ', icon: svgIcons.ganesha },
-  { id: 'lakshmi', name: 'Lakshmi', bengali: 'লক্ষ্মী', icon: svgIcons.lakshmi },
-  { id: 'durga', name: 'Durga', bengali: 'দুর্গা', icon: svgIcons.durga },
-  { id: 'saraswati', name: 'Saraswati', bengali: 'সরস্বতী', icon: svgIcons.saraswati },
-  { id: 'kartikeya', name: 'Kartikeya', bengali: 'কার্তিক', icon: svgIcons.kartikeya }
+  { id: 'ganesha', name: 'Lord Ganesha', bengali: 'গণেশ', image: `${prefix}assets/images/ganesha.png` },
+  { id: 'lakshmi', name: 'Ma Lokkhi', bengali: 'লক্ষ্মী', image: `${prefix}assets/images/lakshmi.png` },
+  { id: 'durga', name: 'Ma Durga', bengali: 'দুর্গা', image: `${prefix}assets/images/durga.png` },
+  { id: 'saraswati', name: 'Ma Saraswati', bengali: 'সরস্বতী', image: `${prefix}assets/images/saraswati.png` },
+  { id: 'kartikeya', name: 'Lord Kartikey', bengali: 'কার্তিক', image: `${prefix}assets/images/kartikeya.png` }
 ];
 
 const CORRECT_ORDER_IDS = ['ganesha', 'lakshmi', 'durga', 'saraswati', 'kartikeya'];
@@ -20,9 +23,9 @@ export function createDwitiyaStage() {
   const header = document.createElement('div');
   header.className = 'stage-header-block';
   header.innerHTML = `
-    <h2 class="stage-title">শুক্লা দ্বিতীয়া</h2>
-    <p class="stage-subtitle">মায়ের পরিবার</p>
-    <p class="stage-instruction">প্রতিমাগুলিকে সনাতন ক্রমে সাজান (গণেশ → লক্ষ্মী → দুর্গা → সরস্বতী → কার্তিক)</p>
+    <h3 class="stage-title">মা মানেই পরিবার</h3>
+    <br/>
+    <p class="stage-instruction">আর পরিবার মানেই তো সেই চিরচেনা মুখগুলো ... সবাইকে তাদের স্ব স্ব স্থানে রাখতে হবে তো!</p>
   `;
 
   const deitiesContainer = document.createElement('div');
@@ -60,20 +63,21 @@ export function createDwitiyaStage() {
 
       gameState.completeStage(3);
 
-      actionArea.innerHTML = `
-        <div class="stage-banner">
-          <p class="stage-banner-text">মায়ের আপনজনেরা প্রস্তুত।</p>
-          <p class="stage-banner-sub">মা আরও একটু কাছে...</p>
-          <button class="btn-continue" id="stage3-continue-btn">
-            <span>পরের ধাপ</span>
-            ${svgIcons.arrowRight}
+      setTimeout(() => {
+        actionArea.innerHTML = `
+          <div class="stage-banner">
+            <p class="stage-banner-text">সাধু... সাধু ...</p>
+            <p class="stage-banner-sub">অসাধারণ করছেন ... এরপর যে দেবতাদের আশীর্বাদ প্রয়োজন হবে</p>
+            <button class="btn-continue" id="stage3-continue-btn">
+              ${svgIcons.arrowRight}
           </button>
         </div>
       `;
 
-      actionArea.querySelector('#stage3-continue-btn').addEventListener('click', () => {
-        gameState.nextStage();
-      });
+        actionArea.querySelector('#stage3-continue-btn').addEventListener('click', () => {
+          gameState.nextStage();
+        });
+      }, 2000);
     }
   }
 
@@ -88,7 +92,7 @@ export function createDwitiyaStage() {
 
       slot.innerHTML = `
         <span class="deity-order-badge">${idx + 1}</span>
-        ${deity.icon}
+        <img src="${deity.image}" alt="${deity.name}" class="deity-img" />
         <span class="deity-name">${deity.bengali}</span>
       `;
 

@@ -25,7 +25,6 @@
 
 .stage-title {
   font-family: var(--font-display);
-  font-size: 1.6rem;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 0.25rem;
@@ -86,7 +85,17 @@
   box-shadow: 0 4px 12px rgba(245, 179, 53, 0.4);
 }
 
+.btn-continue svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: block;
+  stroke: currentColor;
+  fill: none;
+}
+
 /* Stage 1: Mahalaya */
+
+/* ---------- Room ---------- */
 .mahalaya-room {
   flex: 1;
   position: relative;
@@ -106,17 +115,18 @@
   background: radial-gradient(circle at 65% 55%, rgba(245, 179, 53, 0.25) 0%, rgba(38, 26, 45, 0.95) 70%, rgba(14, 10, 20, 0.98) 100%);
 }
 
+/* ---------- Window (smaller: was 90x120) ---------- */
 .window-scenery {
   position: absolute;
   top: 15px;
   left: 20px;
-  width: 90px;
-  height: 120px;
-  border: 4px solid #4a382d;
-  border-radius: 40px 40px 0 0;
+  width: 68px;
+  height: 92px;
+  border: 3px solid #4a382d;
+  border-radius: 32px 32px 0 0;
   background: linear-gradient(180deg, #18233c 0%, #3a3250 60%, #856149 100%);
   overflow: hidden;
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .window-bars {
@@ -142,31 +152,7 @@
   user-select: none;
 }
 
-.diya-wrapper {
-  position: relative;
-  padding: 10px;
-  cursor: grab;
-  transition: transform 0.2s ease;
-  touch-action: none;
-}
-
-.diya-wrapper:active {
-  cursor: grabbing;
-}
-
-.diya-flame {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 14px;
-  height: 22px;
-  background: radial-gradient(ellipse at bottom, #fff 0%, #ffeb3b 40%, #ff5722 80%, transparent 100%);
-  border-radius: 50% 50% 20% 20%;
-  animation: flicker 1.2s infinite alternate ease-in-out;
-  box-shadow: 0 0 20px 6px rgba(255, 140, 0, 0.7);
-}
-
+/* ---------- Radio (shifted right via margin-left) ---------- */
 .radio-wrapper {
   position: relative;
   padding: 12px;
@@ -175,12 +161,141 @@
   transition: all 0.3s ease;
 }
 
-.radio-wrapper.drag-over {
-  border-color: var(--color-gold);
-  background: rgba(245, 179, 53, 0.15);
-  box-shadow: 0 0 25px rgba(245, 179, 53, 0.3);
+.radio-tuner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 320px;
+  margin-left: 3rem;
+  /* moves the radio ~1.5rem right (space-around halves it) */
+  cursor: default;
 }
 
+/* ---------- Tuner (wider, shorter) ---------- */
+.tuner {
+  width: 100%;
+  max-width: 500px;
+  padding: 0.6rem 1.25rem 0.5rem;
+  border-radius: 12px;
+  background: rgba(20, 12, 6, 0.75);
+  border: 1px solid var(--color-gold, #d4a24c);
+  box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.6),
+    0 0 calc(var(--tune-glow, 0) * 24px) rgba(255, 190, 80, calc(var(--tune-glow, 0) * 0.7));
+  transition: box-shadow 0.2s ease;
+}
+
+.tuner-readout {
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  color: var(--color-gold, #d4a24c);
+  margin-bottom: 0.3rem;
+}
+
+.tuner-freq {
+  font-size: 1.4rem;
+  letter-spacing: 0.08em;
+}
+
+.tuner-unit {
+  font-size: 0.75rem;
+  margin-left: 0.3rem;
+  opacity: 0.8;
+}
+
+.tuner-dial {
+  position: relative;
+  height: 30px;
+  /* was 44px */
+  border-radius: 6px;
+  background: linear-gradient(#2a1a0c, #140b05);
+  border: 1px solid rgba(212, 162, 76, 0.5);
+  cursor: grab;
+  touch-action: none;
+  /* essential: lets touch drag instead of scrolling */
+  user-select: none;
+  outline: none;
+}
+
+.tuner-dial:active {
+  cursor: grabbing;
+}
+
+.tuner-dial:focus-visible {
+  box-shadow: 0 0 0 2px var(--color-gold, #d4a24c);
+}
+
+.tuner-dial[aria-disabled="true"] {
+  cursor: default;
+}
+
+.tuner-ticks {
+  position: absolute;
+  inset: 0 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 3px;
+  pointer-events: none;
+}
+
+.tick {
+  width: 1px;
+  height: 7px;
+  background: rgba(212, 162, 76, 0.6);
+}
+
+.tick-major {
+  height: 14px;
+  background: var(--color-gold, #d4a24c);
+}
+
+.tuner-needle {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  background: #e0402a;
+  box-shadow: 0 0 6px rgba(224, 64, 42, 0.9);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.tuner-knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at 35% 35%, #f3d28a, #a8742a);
+  border: 1px solid #5a3b12;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.tuner-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.2rem;
+  font-size: 0.65rem;
+  color: var(--text-secondary, #b9a88f);
+}
+
+.tuner-hint {
+  margin: 0.3rem 0 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-secondary, #b9a88f);
+  min-height: 1.2em;
+}
+
+.radio-tuner.tuned .tuner-hint {
+  color: var(--color-gold, #d4a24c);
+}
+
+/* ---------- Sound waves ---------- */
 .radio-soundwaves {
   position: absolute;
   top: -20px;
@@ -198,9 +313,54 @@
   animation: soundwave 0.8s ease infinite alternate;
 }
 
-.soundwave-bar:nth-child(2) { animation-delay: 0.2s; height: 18px; }
-.soundwave-bar:nth-child(3) { animation-delay: 0.4s; height: 24px; }
-.soundwave-bar:nth-child(4) { animation-delay: 0.1s; height: 12px; }
+.soundwave-bar:nth-child(2) {
+  animation-delay: 0.2s;
+  height: 18px;
+}
+
+.soundwave-bar:nth-child(3) {
+  animation-delay: 0.4s;
+  height: 24px;
+}
+
+.soundwave-bar:nth-child(4) {
+  animation-delay: 0.1s;
+  height: 12px;
+}
+
+/* ---------- Diya (currently commented out in JS; kept in case you bring it back) ---------- */
+.diya-wrapper {
+  position: relative;
+  padding: 10px;
+  transition: transform 0.2s ease;
+}
+
+.diya-flame {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 22px;
+  background: radial-gradient(ellipse at bottom, #fff 0%, #ffeb3b 40%, #ff5722 80%, transparent 100%);
+  border-radius: 50% 50% 20% 20%;
+  animation: flicker 1.2s infinite alternate ease-in-out;
+  box-shadow: 0 0 20px 6px rgba(255, 140, 0, 0.7);
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 480px) {
+  .radio-tuner {
+    min-width: 0;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .mahalaya-room {
+    padding-top: 7rem;
+    /* keep the radio clear of the window */
+  }
+}
 
 /* Stage 2: Pratipad (Transport Choices) */
 .transport-grid {
@@ -231,10 +391,26 @@
   user-select: none;
 }
 
+.transport-img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
+  transition: transform 0.4s ease;
+}
+
+@media (max-width: 600px) {
+  .transport-img {
+    width: 70px;
+    height: 70px;
+  }
+}
+
 .transport-card:hover {
   transform: translateY(-3px);
   border-color: var(--color-gold);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 .transport-card.selected-correct {
@@ -321,6 +497,22 @@
   background: rgba(209, 48, 48, 0.08);
 }
 
+.deity-img {
+  width: 72px;
+  height: 96px;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.3));
+  transition: transform 0.3s ease;
+}
+
+@media (max-width: 600px) {
+  .deity-img {
+    width: 52px;
+    height: 74px;
+  }
+}
+
 .deity-name {
   font-size: 0.85rem;
   font-weight: 600;
@@ -342,129 +534,248 @@
   text-align: center;
 }
 
-/* Stage 4: Tritiya (Weapons Puzzle) */
-.weapons-board {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  align-items: center;
-  margin: 0.5rem 0;
-}
-
-.weapon-arcs-wrapper {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: center;
-  width: 100%;
-}
-
-@media (max-width: 600px) {
-  .weapon-arcs-wrapper {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-}
-
-.weapon-arc {
-  background: var(--bg-theatre-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 0.75rem;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.arc-header {
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  text-align: center;
-  font-weight: 600;
-}
-
-.weapon-slots-row {
-  display: flex;
-  justify-content: space-around;
-  gap: 0.35rem;
-}
-
-.weapon-slot {
-  width: 44px;
-  height: 52px;
-  background: var(--bg-theatre);
-  border: 1px dashed var(--border-subtle);
-  border-radius: var(--radius-sm);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+/* Stage 4: Tritiya (Weaponize Ma Durga) */
+.stage4-container {
+  --bg1: #2a0a0f;
+  --bg2: #12040a;
+  --gold: #f2c14e;
+  --gold-soft: #c9973a;
+  --crimson: #b3202f;
+  --ink: #fff3da;
+  --slot: clamp(54px, 11vw, 76px);
   position: relative;
-  transition: all var(--transition-fast);
-  cursor: pointer;
-}
-
-.weapon-slot.missing {
-  border-color: var(--color-gold);
-  background: rgba(245, 179, 53, 0.08);
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--color-gold);
-}
-
-.weapon-slot.solved {
-  border-color: var(--color-sindoor);
-  border-style: solid;
-  background: rgba(209, 48, 48, 0.1);
-}
-
-.weapon-slot-icon {
-  width: 24px;
-  height: 24px;
-}
-
-.weapon-chips-pool {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.4rem;
-  max-width: 580px;
-}
-
-.weapon-chip {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  padding: 0.4rem 0.65rem;
-  background: var(--bg-theatre-accent);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-full);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  user-select: none;
   touch-action: manipulation;
 }
 
-.weapon-chip:hover {
-  border-color: var(--color-gold);
-  color: var(--color-gold);
+#arena {
+  position: relative;
+  width: 100%;
+  max-width: 680px;
+  height: clamp(340px, 54vw, 420px);
+  margin: 0 auto;
+}
+
+#hub {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(64px, 14vw, 96px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: clamp(28px, 7vw, 48px);
+  color: var(--gold);
+  background: radial-gradient(circle, rgba(179, 32, 47, .35), rgba(0, 0, 0, 0) 70%);
+  border: 1px solid rgba(242, 193, 78, .25);
+  transition: box-shadow .8s, background .8s;
+  user-select: none;
+}
+
+#hub.done {
+  box-shadow: 0 0 50px 12px rgba(242, 193, 78, .45);
+  background: radial-gradient(circle, rgba(242, 193, 78, .45), rgba(0, 0, 0, 0) 70%);
+  animation: breathe 3.2s ease-in-out infinite;
+}
+
+.ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  opacity: 0;
+  pointer-events: none;
+  animation: ripple 2.2s ease-out forwards;
+}
+
+.slot {
+  position: absolute;
+  width: var(--slot);
+  height: var(--slot);
+  margin: calc(var(--slot) / -2) 0 0 calc(var(--slot) / -2);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: transform .25s, box-shadow .4s, background .4s, border-color .4s;
+}
+
+/* unrevealed: sealed medallion, no name */
+.slot.sealed {
+  background: radial-gradient(circle at 35% 30%, #4a1620, #1b070c 80%);
+  border: 2px solid rgba(201, 151, 58, .55);
+  box-shadow: inset 0 0 14px rgba(0, 0, 0, .7);
+}
+
+.slot.sealed::after {
+  content: "";
+  width: 14px;
+  height: 14px;
+  transform: rotate(45deg);
+  border: 2px solid rgba(242, 193, 78, .55);
+  border-radius: 2px;
+}
+
+/* missing: question mark */
+.slot.missing {
+  background: rgba(242, 193, 78, .08);
+  border: 2px dashed var(--gold);
+  color: var(--gold);
+  font-size: clamp(26px, 5vw, 36px);
+  font-weight: bold;
+  animation: pulse 1.8s ease-in-out infinite;
+  cursor: pointer;
+}
+
+.slot.missing.over {
+  transform: scale(1.14);
+  background: rgba(242, 193, 78, .25);
+}
+
+.slot.filled {
+  animation: none;
+  border-style: solid;
+  background: radial-gradient(circle at 35% 30%, #7a2a1a, #3a0f10 80%);
+  box-shadow: 0 0 16px rgba(242, 193, 78, .5);
+}
+
+.slot .label {
+  display: none;
+  font-size: clamp(8px, 1.8vw, 10px);
+  letter-spacing: .04em;
+  font-weight: bold;
+  color: var(--ink);
+  line-height: 1.1;
+  padding: 2px;
+}
+
+.slot.filled .label,
+.slot.revealed .label {
+  display: block;
+}
+
+.slot.filled::after,
+.slot.revealed::after {
+  display: none;
+}
+
+.slot.revealed {
+  border: 2px solid var(--gold);
+  background: radial-gradient(circle at 35% 30%, #8a3a1c, #3a0f10 80%);
+  animation: pop .7s cubic-bezier(.2, 1.4, .4, 1) both, glow 3s ease-in-out .7s infinite;
+  animation-delay: calc(var(--i) * 90ms), calc(var(--i) * 90ms + .7s);
+}
+
+.slot.shake {
+  animation: shake .4s;
+  border-color: #ff5a5a;
+}
+
+/* ---------- chips ---------- */
+#tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  max-width: 680px;
+  margin: 40px auto 0;
+}
+
+.chip {
+  font: bold 13px/1 Georgia, serif;
+  letter-spacing: .08em;
+  padding: 9px 14px;
+  border-radius: 999px;
+  color: #2a0a0f;
+  background: linear-gradient(180deg, #ffe08a, var(--gold-soft));
+  border: 1px solid #fff0b8;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, .45);
+  transition: opacity .25s, transform .15s, filter .3s;
+}
+
+.chip {
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+  /* already there; keep it on .chip itself */
+}
+
+.slot {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.chip:hover {
   transform: translateY(-2px);
 }
 
-.weapon-chip.selected {
-  background: var(--color-gold);
-  color: #241604;
-  border-color: var(--color-gold);
-  box-shadow: 0 0 10px rgba(245, 179, 53, 0.5);
+.chip.selected {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
 }
 
-.weapon-chip.used {
-  opacity: 0.35;
+.chip.dragging {
+  opacity: .3;
+}
+
+.chip.used {
+  opacity: .25;
   pointer-events: none;
-  border-style: dashed;
+  filter: grayscale(.6);
+}
+
+.chip.ghost {
+  position: fixed;
+  z-index: 999;
+  pointer-events: none;
+  margin: 0;
+  transform: translate(-50%, -50%) scale(1.08);
+  cursor: grabbing;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .6);
+}
+
+#tray.done .chip {
+  opacity: 1;
+  filter: none;
+  animation: glow 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.bar {
+  margin-top: 25px;
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  justify-content: center;
+  color: #cdb88c;
+  font-size: 14px;
+}
+
+button#stage4-again,
+button#again {
+  font: inherit;
+  padding: 7px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--gold);
+  background: transparent;
+  border: 1px solid var(--gold-soft);
+  transition: background 0.2s ease;
+}
+
+button#stage4-again:hover,
+button#again:hover {
+  background: rgba(242, 193, 78, .12);
 }
 
 /* Stage 5: Chaturthi (Start the Puja) */
@@ -478,6 +789,7 @@
   padding: 2rem 1rem;
   margin: 1rem 0;
   min-height: 200px;
+  gap: 2rem;
 }
 
 .puja-item-card {
@@ -499,7 +811,7 @@
 
 .puja-item-card.activated {
   box-shadow: var(--shadow-glow);
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 .puja-item-title {
@@ -511,6 +823,62 @@
 .puja-item-bengali {
   font-size: 0.85rem;
   color: var(--text-secondary);
+}
+
+.stage5-bodhon-note {
+  display: inline-block;
+  font-size: smaller;
+  color: gray;
+  margin-top: 10px;
+  padding: 6px 14px;
+  border: 1px solid rgba(255, 190, 80, 0.7);
+  border-radius: 999px;
+  box-shadow:
+    0 0 6px rgba(255, 190, 80, 0.6),
+    0 0 14px rgba(255, 150, 40, 0.35),
+    inset 0 0 6px rgba(255, 190, 80, 0.25);
+  animation: stage5-bodhon-glow 2.4s ease-in-out infinite;
+}
+
+@keyframes stage5-bodhon-glow {
+
+  0%,
+  100% {
+    border-color: rgba(255, 190, 80, 0.5);
+    box-shadow:
+      0 0 4px rgba(255, 190, 80, 0.4),
+      0 0 10px rgba(255, 150, 40, 0.2),
+      inset 0 0 4px rgba(255, 190, 80, 0.15);
+  }
+
+  50% {
+    border-color: rgba(255, 210, 120, 0.95);
+    box-shadow:
+      0 0 8px rgba(255, 190, 80, 0.8),
+      0 0 20px rgba(255, 150, 40, 0.5),
+      inset 0 0 8px rgba(255, 190, 80, 0.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage5-bodhon-note {
+    animation: none;
+  }
+}
+
+.stage5-bodhon-timer {
+  display: inline-block;
+  min-width: 1.6em;
+  /* keeps the layout from jumping between ১০ and ৯ */
+  margin-left: 6px;
+  text-align: center;
+  font-size: 1.6em;
+  /* relative to the note's "smaller" size */
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: middle;
+  color: rgb(255, 205, 110);
+  text-shadow: 0 0 8px rgba(255, 190, 80, 0.8);
 }
 
 /* Stage 6: Panchami / Bodhan Reveal */
@@ -565,22 +933,40 @@
   transform: scale(1);
 }
 
+#bodhan-message-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* centers the card horizontally */
+  width: 100%;
+  margin-top: 20px;
+  /* the gap from the element above */
+}
+
 .final-card {
-  margin-top: 1rem;
+  width: 100%;
+  max-width: 480px;
+  margin: 0;
+  /* spacing now comes from the message area */
+  text-align: center;
+  /* centers heading, prose and button text */
   background: var(--bg-glass);
   backdrop-filter: blur(10px);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   padding: 1.25rem 1.5rem;
-  max-width: 480px;
   animation: fadeInUp 0.8s ease forwards;
+}
+
+.final-card .btn-restart {
+  margin-top: 1rem;
 }
 
 .final-heading {
   font-family: var(--font-display);
   font-size: 1.6rem;
   color: var(--color-sindoor);
-  margin-bottom: 0.5rem;
+  margin-bottom: 1.0rem;
 }
 
 .final-prose {
@@ -596,8 +982,11 @@
   font-size: 0.85rem;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-full);
+  border-width: 2px;
+  border-color: green;
   color: var(--text-muted);
   transition: all var(--transition-fast);
+  font-weight: bold;
 }
 
 .btn-restart:hover {
@@ -608,27 +997,331 @@
 
 /* Keyframe Animations */
 @keyframes flicker {
-  0% { transform: translateX(-50%) scale(1); opacity: 0.9; }
-  50% { transform: translateX(-48%) scale(1.08, 0.96); opacity: 1; }
-  100% { transform: translateX(-52%) scale(0.95, 1.05); opacity: 0.85; }
+  0% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0.9;
+  }
+
+  50% {
+    transform: translateX(-48%) scale(1.08, 0.96);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(-52%) scale(0.95, 1.05);
+    opacity: 0.85;
+  }
 }
 
 @keyframes soundwave {
-  0% { height: 6px; }
-  100% { height: 22px; }
+  0% {
+    height: 6px;
+  }
+
+  100% {
+    height: 22px;
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes pulseAura {
-  from { transform: scale(0.96); opacity: 0.8; }
-  to { transform: scale(1.06); opacity: 1; }
+  from {
+    transform: scale(0.96);
+    opacity: 0.8;
+  }
+
+  to {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+}
+
+/* Stage 5 Final Durga Banner */
+.stage5-completion-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.stage5-durga-wrapper {
+  position: relative;
+  width: 140px;
+  height: 150px;
+  margin: 0.5rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stage5-durga-aura {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245, 179, 53, 0.45) 0%, rgba(209, 48, 48, 0.2) 60%, transparent 80%);
+  animation: pulseAura 2.5s infinite alternate ease-in-out;
+  pointer-events: none;
+}
+
+.stage5-durga-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.35));
+  z-index: 1;
+}
+
+/* Stage 6 Bodhan Durga Photo Frame */
+.durga-photo-frame {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.bodhan-durga-photo {
+  max-width: 220px;
+  max-height: 250px;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  filter: drop-shadow(0 8px 24px rgba(245, 179, 53, 0.4));
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(242, 193, 78, .45);
+  }
+
+  50% {
+    box-shadow: 0 0 0 10px rgba(242, 193, 78, 0);
+  }
+}
+
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(-7px);
+  }
+
+  40% {
+    transform: translateX(7px);
+  }
+
+  60% {
+    transform: translateX(-5px);
+  }
+
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(.8);
+  }
+
+  60% {
+    transform: scale(1.18);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(242, 193, 78, .35);
+  }
+
+  50% {
+    box-shadow: 0 0 26px rgba(242, 193, 78, .8);
+  }
+}
+
+@keyframes breathe {
+
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.07);
+  }
+}
+
+@keyframes ripple {
+  0% {
+    opacity: .8;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(14);
+  }
+}
+
+/* Image sizing: copy the width/height from your old `.puja-item-card svg` rule
+   so the layout is identical. 100%/auto is a safe fallback. */
+.puja-item-img {
+  display: block;
+  max-width: 220px;
+  max-height: 250px;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+  /* clicks land on the card */
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.25));
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+/* The JS sets inline transforms on these containers; make them animate smoothly */
+#dhak-graphic-container,
+#conch-graphic-container {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+}
+
+/* Hover / focus / pressed */
+.puja-item-card {
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.puja-item-card:hover {
+  transform: translateY(-4px);
+}
+
+.puja-item-card:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+.puja-item-card:hover .puja-item-img {
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.3));
+}
+
+.puja-item-card:focus-visible {
+  outline: 2px solid var(--color-gold, #f2c14e);
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+/* Activated glow (class already added by your JS) */
+.puja-item-card.activated .puja-item-img {
+  filter: drop-shadow(0 0 14px rgba(255, 190, 70, 0.75));
+}
+
+/* Gentle idle float for the diya flame, if it doesn't already animate */
+#chaturthi-flame {
+  transform-origin: 50% 100%;
+  animation: flameFlicker 1.6s ease-in-out infinite;
+}
+
+@keyframes flameFlicker {
+
+  0%,
+  100% {
+    transform: scale(1) rotate(-1deg);
+  }
+
+  50% {
+    transform: scale(1.06, 1.12) rotate(1.5deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .puja-item-card,
+  .puja-item-img,
+  #chaturthi-flame {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Shiuli Flower Animation */
+
+/* Clips the flowers to the app body area */
+.shiuli-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 5;
+  /* adjust: above the photo/aura, below the final card */
+}
+
+.shiuli-flower {
+  position: absolute;
+  top: -40px;
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: shiuli-fall var(--fall-duration, 7s) linear forwards;
+}
+
+@keyframes shiuli-fall {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  8% {
+    opacity: 0.95;
+  }
+
+  50% {
+    transform: translate(var(--sway-mid, -40px), calc(var(--fall-distance) * 0.5)) rotate(var(--rot-mid, 120deg));
+  }
+
+  92% {
+    opacity: 0.95;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(var(--sway-end, -80px), var(--fall-distance)) rotate(var(--rot-end, 260deg));
+  }
 }
