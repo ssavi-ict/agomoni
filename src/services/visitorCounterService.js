@@ -11,8 +11,6 @@ const firebaseConfig = {
   measurementId: env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-let firebaseServicesPromise;
-
 function hasValidDatabaseUrl(value) {
   if (!value) return false;
 
@@ -24,6 +22,8 @@ function hasValidDatabaseUrl(value) {
     return false;
   }
 }
+
+let firebaseServicesPromise;
 
 function getFirebaseServices() {
   if (!firebaseServicesPromise) {
@@ -50,11 +50,11 @@ export class FirebaseVisitorCounterService extends VisitorCounterService {
   constructor(gameId = 'agomoni26') {
     super();
     this.gameId = gameId;
-    this.sessionKey = `visited_${gameId}`;
   }
 
   async getVisitorCount() {
     if (!firebaseConfig.databaseURL) {
+      console.error('Firebase visitor counter is disabled: configure VITE_FIREBASE_DATABASE_URL in the deployment environment.');
       return '000000';
     }
 
@@ -64,23 +64,17 @@ export class FirebaseVisitorCounterService extends VisitorCounterService {
     }
 
     try {
-      const { database, ref, get, runTransaction } = await getFirebaseServices();
+      const { database, ref, runTransaction } = await getFirebaseServices();
       const counterRef = ref(database, `games/${this.gameId}/visitor_count`);
-      const hasVisited = sessionStorage.getItem(this.sessionKey);
+      const result = await runTransaction(counterRef, (currentCount) =>
+        typeof currentCount === 'number' && Number.isFinite(currentCount) ? currentCount + 1 : 1
+      );
 
-      if (!hasVisited) {
-        const transactionResult = await runTransaction(counterRef, (currentCount) => {
-          return (currentCount || 0) + 1;
-        });
-
-        sessionStorage.setItem(this.sessionKey, 'true');
-        const count = transactionResult.snapshot.val();
-        return String(count).padStart(6, '0');
-      } else {
-        const snapshot = await get(counterRef);
-        const count = snapshot.exists() ? snapshot.val() : 0;
-        return String(count).padStart(6, '0');
+      if (!result.committed) {
+        throw new Error('Firebase visitor counter transaction was not committed.');
       }
+
+      return String(result.snapshot.val()).padStart(6, '0');
     } catch (error) {
       console.error('Firebase visitor counter error:', error);
       return '000000';

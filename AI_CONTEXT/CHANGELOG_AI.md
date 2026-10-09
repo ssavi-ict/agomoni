@@ -1,20 +1,11 @@
-## 2026-10-09 — Keep the Game Available Without Firebase Configuration
+## 2026-10-09 — Increment Visitor Count on Every Page Visit
 - **What changed:**
-  - Made Firebase SDK loading and initialization lazy so missing or invalid database configuration cannot crash the app during startup.
-  - Return the existing zero-padded placeholder when no valid Firebase Realtime Database URL is configured.
-  - Added a test for the unconfigured fallback and clarified how to enable the live visitor count.
-- **Files/components affected:** `src/services/visitorCounterService.js`, `tests/game.test.js`, `AI_CONTEXT/CURRENT_STATE.md`, `AI_CONTEXT/TODO.md`, `AI_CONTEXT/CHANGELOG_AI.md`.
-- **Known issues:** The live visitor count requires a valid Firebase Realtime Database URL and configured GitHub Actions secrets.
-- **Next relevant task:** Configure Firebase secrets only if a live visitor count is desired.
-
-## 2026-10-09 — Publish GitHub Pages from the `deploy` Branch
-- **What changed:**
-  - Updated `.github/workflows/deploy.yml` to build on pushes to `main` (or manual dispatch) and publish the generated `dist/` contents to the `deploy` branch.
-  - Changed workflow permissions to the minimum needed for publishing branch contents.
-  - Documented the remaining one-time GitHub Pages setting: select `deploy` / root as the Pages source.
-- **Files/components affected:** `.github/workflows/deploy.yml`, `AI_CONTEXT/CURRENT_STATE.md`, `AI_CONTEXT/TODO.md`, `AI_CONTEXT/CHANGELOG_AI.md`.
-- **Known issues:** GitHub Pages repository settings must be changed manually to use the `deploy` branch.
-- **Next relevant task:** Configure Pages to publish from `deploy` / root and verify the live site.
+  - Removed per-session visit suppression so each page visit executes an atomic Firebase Realtime Database transaction.
+  - Lazily load Firebase only when a valid Firebase database URL exists; log configuration and database errors while preserving the `000000` fallback.
+  - Require valid numeric state for the shared counter, initializing an empty/malformed value at 1.
+- **Files/components affected:** `src/services/visitorCounterService.js`, `AI_CONTEXT/CURRENT_STATE.md`, `AI_CONTEXT/TODO.md`, `AI_CONTEXT/CHANGELOG_AI.md`.
+- **Known issues:** A live count still requires Firebase deployment configuration and database rules that allow the counter read/write transaction.
+- **Next relevant task:** Verify Firebase Actions configuration and Realtime Database rules, then deploy.
 
 ## 2026-10-04 — Image Assets Integration & Stage 4 Weaponize Ma Durga Overhaul
 - **What changed:**
