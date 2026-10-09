@@ -1,3 +1,12 @@
+## 2026-10-09 — Keep the Game Available Without Firebase Configuration
+- **What changed:**
+  - Made Firebase SDK loading and initialization lazy so missing or invalid database configuration cannot crash the app during startup.
+  - Return the existing zero-padded placeholder when no valid Firebase Realtime Database URL is configured.
+  - Added a test for the unconfigured fallback and clarified how to enable the live visitor count.
+- **Files/components affected:** `src/services/visitorCounterService.js`, `tests/game.test.js`, `AI_CONTEXT/CURRENT_STATE.md`, `AI_CONTEXT/TODO.md`, `AI_CONTEXT/CHANGELOG_AI.md`.
+- **Known issues:** The live visitor count requires a valid Firebase Realtime Database URL and configured GitHub Actions secrets.
+- **Next relevant task:** Configure Firebase secrets only if a live visitor count is desired.
+
 ## 2026-10-09 — Publish GitHub Pages from the `deploy` Branch
 - **What changed:**
   - Updated `.github/workflows/deploy.yml` to build on pushes to `main` (or manual dispatch) and publish the generated `dist/` contents to the `deploy` branch.

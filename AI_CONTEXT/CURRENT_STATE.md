@@ -15,7 +15,7 @@
 - **Audio System:** Centralized `AudioManager` with mute toggle and resilient Web Audio procedural synthesis fallbacks.
 - **Theme:** Atmospheric Night Mode toggle with `prefers-color-scheme` support and `localStorage` persistence.
 - **State & Storage:** `agomoni-game-state` persisted to `localStorage` (currentStage, completedStages, theme, muted). Strictly completion-based.
-- **Visitor Counter:** Clean service abstraction (`VisitorCounterService`) with zero-padded format (`Visitors: 000000`). Ready for future Firebase integration.
+- **Visitor Counter:** Isolated Firebase-backed service with zero-padded counts. If a valid Firebase Realtime Database URL is not configured, it safely displays the `000000` fallback without preventing the game from loading.
 - **Deployment:** GitHub Pages workflow `.github/workflows/deploy.yml` builds on `main` and publishes `dist/` to the `deploy` branch. Configure GitHub Pages to publish from `deploy` / root in repository settings.
 
 ## Latest Meaningful Changes

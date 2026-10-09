@@ -59,6 +59,7 @@ console.log('2. Testing Visitor Counter Service...');
 const { visitorCounterService } = await import('../src/services/visitorCounterService.js');
 const countStr = await visitorCounterService.getVisitorCount();
 assert.match(countStr, /^\d{6}$/, 'Visitor counter must format as 6 digits with leading zeros (e.g. 000000)');
+assert.strictEqual(countStr, '000000', 'Visitor counter should use its fallback when Firebase is not configured');
 console.log(`✓ Visitor Counter returned: ${countStr}`);
 
 // 3. Test Audio Manager
