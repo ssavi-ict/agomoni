@@ -5,6 +5,9 @@ class AudioManager {
   constructor() {
     this.audioContext = null;
     this.currentAudios = new Set();
+    this.activeAudiosByKey = new Map();
+    this.audioNodes = new Map();
+    this.fadeTimers = new Map();
     this.basePath = (import.meta.env && import.meta.env.BASE_URL) ? import.meta.env.BASE_URL : './';
     if (!this.basePath.endsWith('/')) {
       this.basePath += '/';
@@ -46,18 +49,132 @@ class AudioManager {
     });
   }
 
+  createAudioGain(audio) {
+    try {
+      const context = this.getAudioContext();
+      if (!context?.createMediaElementSource || !context.createGain) return null;
+
+      const source = context.createMediaElementSource(audio);
+      const gain = context.createGain();
+      source.connect(gain);
+      gain.connect(context.destination);
+      const nodes = { source, gain, volume: 1 };
+      this.audioNodes.set(audio, nodes);
+      return nodes;
+    } catch (err) {
+      console.info('Mahalaya audio fade is unavailable; using media volume controls.', err?.message || err);
+      return null;
+    }
+  }
+
+  clearFade(audio) {
+    const fade = this.fadeTimers.get(audio);
+    if (!fade) return;
+    if (fade.timeoutId !== null) clearTimeout(fade.timeoutId);
+    if (fade.intervalId !== null) clearInterval(fade.intervalId);
+    this.fadeTimers.delete(audio);
+  }
+
+  cleanupAudio(audio) {
+    this.clearFade(audio);
+    this.currentAudios.delete(audio);
+    const nodes = this.audioNodes.get(audio);
+    if (nodes) {
+      nodes.source.disconnect();
+      nodes.gain.disconnect();
+      this.audioNodes.delete(audio);
+    }
+    for (const [key, activeAudio] of this.activeAudiosByKey) {
+      if (activeAudio === audio) this.activeAudiosByKey.delete(key);
+    }
+  }
+
+  fadeTo(key, targetVolume, durationMs = 2000, stopWhenComplete = false) {
+    const audio = this.activeAudiosByKey.get(key);
+    if (!audio || audio.paused || durationMs <= 0) return;
+
+    const nodes = this.audioNodes.get(audio);
+    const now = nodes ? this.audioContext.currentTime : Date.now();
+    const currentFade = this.fadeTimers.get(audio);
+    const progress = currentFade
+      ? Math.min((now - currentFade.startTime) / currentFade.duration, 1)
+      : 1;
+    const endVolume = Math.min(Math.max(targetVolume, 0), 1);
+    const startVolume = currentFade
+      ? currentFade.startVolume + (currentFade.targetVolume - currentFade.startVolume) * progress
+      : nodes ? nodes.volume : audio.volume;
+
+    this.clearFade(audio);
+    if (nodes) {
+      const { gain } = nodes;
+      gain.gain.cancelScheduledValues(now);
+      gain.gain.setValueAtTime(startVolume, now);
+      gain.gain.linearRampToValueAtTime(endVolume, now + durationMs / 1000);
+      const timeoutId = setTimeout(() => {
+        this.fadeTimers.delete(audio);
+        nodes.volume = endVolume;
+        if (stopWhenComplete) this.stopAudio(audio);
+      }, durationMs);
+      this.fadeTimers.set(audio, {
+        timeoutId,
+        intervalId: null,
+        startTime: now,
+        duration: durationMs / 1000,
+        startVolume,
+        targetVolume: endVolume,
+      });
+      return;
+    }
+
+    const startTime = now;
+    const intervalId = setInterval(() => {
+      const progress = Math.min((Date.now() - startTime) / durationMs, 1);
+      audio.volume = startVolume + (endVolume - startVolume) * progress;
+      if (progress === 1) {
+        this.clearFade(audio);
+        if (stopWhenComplete) this.stopAudio(audio);
+      }
+    }, 50);
+    this.fadeTimers.set(audio, {
+      timeoutId: null,
+      intervalId,
+      startTime,
+      duration: durationMs,
+      startVolume,
+      targetVolume: endVolume,
+    });
+  }
+
+  fadeOut(key, durationMs = 2000) {
+    this.fadeTo(key, 0, durationMs, true);
+  }
+
+  stopAudio(audio) {
+    this.clearFade(audio);
+    try {
+      audio.pause();
+      audio.currentTime = 0;
+    } catch (err) {
+      console.info('Audio could not be stopped cleanly.', err?.message || err);
+    }
+    this.cleanupAudio(audio);
+  }
+
   async playSound(key, synthFallbackFn) {
     if (this.isMuted()) return null;
 
     const url = this.audioUrls[key];
     if (url) {
+      let audio;
       try {
-        const audio = new Audio(url);
+        audio = new Audio(url);
         audio.muted = this.isMuted();
         this.currentAudios.add(audio);
+        this.activeAudiosByKey.set(key, audio);
+        if (key === 'mahalaya') this.createAudioGain(audio);
 
         audio.onended = () => {
-          this.currentAudios.delete(audio);
+          this.cleanupAudio(audio);
         };
 
         const playPromise = audio.play();
@@ -66,6 +183,7 @@ class AudioManager {
           return audio;
         }
       } catch (err) {
+        if (audio) this.cleanupAudio(audio);
         // Legal audio asset not provided or network failure; continue gracefully without crashing
         console.info(`Audio file '${key}' not found or blocked. Playing graceful procedural audio fallback.`, err?.message || err);
       }
@@ -285,12 +403,10 @@ class AudioManager {
 
   stopAll() {
     this.currentAudios.forEach(audio => {
-      try {
-        audio.pause();
-        audio.currentTime = 0;
-      } catch (e) { }
+      this.stopAudio(audio);
     });
     this.currentAudios.clear();
+    this.activeAudiosByKey.clear();
   }
 }
 

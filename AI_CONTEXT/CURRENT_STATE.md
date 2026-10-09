@@ -12,13 +12,15 @@
 - **Stage 4 (Shukla Tritiya):** 10 canonical weapons in two arcs (Left: Chakra, Trident, Sword, Thunderbolt, Lotus; Right: Conch, Spear, Bow, Snake, Axe). Exactly 2 positions randomized as `?`, unrevealed slot names, 10 selectable weapon chips.
 - **Stage 5 (Shukla Chaturthi):** Exactly titled "Start the Puja". Unprompted discovery sequence: Diya -> Dhak -> Conch with interactive sound and festive lighting.
 - **Stage 6 (Panchami / Bodhan):** Atmospheric reward scene. Maa Durga face reveal synchronized precisely with dhak reveal audio, concluding poem and journey restart.
-- **Audio System:** Centralized `AudioManager` with mute toggle and resilient Web Audio procedural synthesis fallbacks.
+- **Audio System:** Centralized `AudioManager` with mute toggle, resilient Web Audio procedural synthesis fallbacks, and a two-second Mahalaya fade to quiet background level at Diya followed by a fade to silence at Conch.
 - **Theme:** Atmospheric Night Mode toggle with `prefers-color-scheme` support and `localStorage` persistence.
 - **State & Storage:** `agomoni-game-state` persisted to `localStorage` (currentStage, completedStages, theme, muted). Strictly completion-based.
 - **Visitor Counter:** Each stage increments the shared Firebase Realtime Database count when it is displayed, and the footer subscribes to live updates. A page visit increments once for each stage the player enters. Missing/invalid configuration or Firebase access errors fall back to `000000`.
 - **Deployment:** GitHub Pages workflow `.github/workflows/deploy.yml` and relative base path.
 
 ## Latest Meaningful Changes
+- Mahalaya now fades to a quiet background level when the first Diya is lit, continues beneath the Stage 5 sounds, then fades to silence when Conch is triggered.
+- Replaced the intro start button's unsupported arrow glyph with a CSS-drawn arrow for consistent mobile rendering.
 - Refined footer credit typography with a modestly larger display font and theme-aware link styling.
 - Styled the Stage 6 credit links with theme-aware colors so they remain readable in dark mode.
 - Integrated downloaded high-resolution images in `public/assets/images/`:
