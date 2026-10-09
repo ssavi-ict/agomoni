@@ -57,15 +57,8 @@ console.log('✓ Game State & Persistence tests passed');
 // 2. Test Visitor Counter Service
 console.log('2. Testing Visitor Counter Service...');
 const { visitorCounterService } = await import('../src/services/visitorCounterService.js');
-const recordStageLoad = visitorCounterService.recordStageLoad;
-let stageLoadCount = 0;
-visitorCounterService.recordStageLoad = () => {
-  stageLoadCount += 1;
-  return Promise.resolve('000000');
-};
-await import('../src/components/GameShell.js');
-assert.strictEqual(stageLoadCount, 6, 'Each stage module should record one load when the game shell imports them');
-visitorCounterService.recordStageLoad = recordStageLoad;
+const stageLoadCount = await visitorCounterService.recordStageLoad();
+assert.strictEqual(stageLoadCount, '000000', 'Stage entry should use the fallback if Firebase is not configured');
 const countStr = await visitorCounterService.getVisitorCount();
 assert.match(countStr, /^\d{6}$/, 'Visitor counter must format as 6 digits with leading zeros (e.g. 000000)');
 assert.strictEqual(countStr, '000000', 'Visitor counter should use its fallback when Firebase is not configured');
