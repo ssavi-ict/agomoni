@@ -33,4 +33,4 @@
 - None.
 
 ## Next Recommended Task
-- Deploy to GitHub repository and activate GitHub Pages in repository settings.
+- Set GitHub Pages source to the `deploy` branch at `/(root)` in repository settings, then verify the published site.
