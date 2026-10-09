@@ -7,7 +7,7 @@ export function createFooter() {
 
   const leftText = document.createElement('div');
   leftText.className = 'footer-credit';
-  leftText.innerHTML = `<span>Agomoni — Bringing Maa Durga Home</span>`;
+  leftText.innerHTML = `<span>Agomoni - by Avik Sarkar</span>`;
 
   const rightCounter = createVisitorCounter();
 

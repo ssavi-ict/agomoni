@@ -13,9 +13,10 @@ class AudioManager {
     // Audio file paths relative to deployment base
     this.audioUrls = {
       mahalaya: `${this.basePath}assets/audio/mahalaya.mp3`,
+      diya: `${this.basePath}assets/audio/diya.mp3`,
       dhak: `${this.basePath}assets/audio/dhak.mp3`,
       conch: `${this.basePath}assets/audio/conch.mp3`,
-      dhakReveal: `${this.basePath}assets/audio/dhak-reveal.mp3`
+      finalReveal: `${this.basePath}assets/audio/chandi_mangal.mp3`
     };
 
     // Listen for state changes to mute/unmute active sounds
@@ -30,7 +31,7 @@ class AudioManager {
       this.audioContext = new AudioCtx();
     }
     if (this.audioContext && this.audioContext.state === 'suspended') {
-      this.audioContext.resume().catch(() => {});
+      this.audioContext.resume().catch(() => { });
     }
     return this.audioContext;
   }
@@ -99,6 +100,60 @@ class AudioManager {
         gain.connect(ctx.destination);
         osc.start(now + idx * 0.15);
         osc.stop(now + 6.0);
+      });
+    });
+  }
+
+  playDiya() {
+    return this.playSound('diya', (ctx) => {
+      if (!ctx) return;
+      const now = ctx.currentTime;
+
+      // --- Flame ignition: short filtered-noise whoosh ---
+      const noiseLen = Math.floor(ctx.sampleRate * 0.5);
+      const noiseBuf = ctx.createBuffer(1, noiseLen, ctx.sampleRate);
+      const data = noiseBuf.getChannelData(0);
+      for (let i = 0; i < noiseLen; i++) data[i] = Math.random() * 2 - 1;
+
+      const noise = ctx.createBufferSource();
+      noise.buffer = noiseBuf;
+      const nFilter = ctx.createBiquadFilter();
+      const nGain = ctx.createGain();
+      nFilter.type = 'bandpass';
+      nFilter.Q.setValueAtTime(1.2, now);
+      nFilter.frequency.setValueAtTime(400, now);
+      nFilter.frequency.exponentialRampToValueAtTime(1800, now + 0.35);
+      nGain.gain.setValueAtTime(0, now);
+      nGain.gain.linearRampToValueAtTime(0.07, now + 0.08);
+      nGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
+      noise.connect(nFilter);
+      nFilter.connect(nGain);
+      nGain.connect(ctx.destination);
+      noise.start(now);
+      noise.stop(now + 0.5);
+
+      // --- Temple bell: inharmonic partials with long exponential decay ---
+      const bellStart = now + 0.12;
+      const baseFreq = 880; // A5
+      const partials = [
+        { ratio: 1.0, amp: 0.12, decay: 2.4 },
+        { ratio: 2.0, amp: 0.07, decay: 1.8 },
+        { ratio: 2.76, amp: 0.05, decay: 1.4 },
+        { ratio: 5.4, amp: 0.03, decay: 0.9 },
+        { ratio: 8.93, amp: 0.015, decay: 0.5 },
+      ];
+      partials.forEach(({ ratio, amp, decay }) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(baseFreq * ratio, bellStart);
+        g.gain.setValueAtTime(0, bellStart);
+        g.gain.linearRampToValueAtTime(amp, bellStart + 0.01);       // sharp strike
+        g.gain.exponentialRampToValueAtTime(0.0001, bellStart + decay);
+        osc.connect(g);
+        g.connect(ctx.destination);
+        osc.start(bellStart);
+        osc.stop(bellStart + decay + 0.05);
       });
     });
   }
@@ -178,13 +233,13 @@ class AudioManager {
   }
 
   playDhakReveal() {
-    return this.playSound('dhakReveal', (ctx) => {
+    return this.playSound('finalReveal', (ctx) => {
       if (!ctx) return;
       // Grand celebratory Dhak crescendo & temple gong for Bodhan Maa Durga face reveal
       const now = ctx.currentTime;
       // Rapid rolling dhak strokes building to grand finale
       const rollOffsets = [
-        0, 0.1, 0.2, 0.28, 0.36, 0.44, 0.52, 0.60, 0.68, 0.76, 
+        0, 0.1, 0.2, 0.28, 0.36, 0.44, 0.52, 0.60, 0.68, 0.76,
         0.85, 0.95, 1.05, 1.15, 1.25, 1.4, 1.6, 1.8, 2.0, 2.3
       ];
 
@@ -233,7 +288,7 @@ class AudioManager {
       try {
         audio.pause();
         audio.currentTime = 0;
-      } catch (e) {}
+      } catch (e) { }
     });
     this.currentAudios.clear();
   }

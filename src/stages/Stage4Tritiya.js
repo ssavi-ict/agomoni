@@ -1,112 +1,299 @@
-// Stage 4: Shukla Tritiya (শুক্লা তৃতীয়া — মায়ের অস্ত্র)
+// Stage 4: Shukla Tritiya (শুক্লা তৃতীয়া — Weaponize Ma Durga)
 import { gameState } from '../state/gameState.js';
 import { svgIcons } from '../assets/svgIcons.js';
 
-const CANONICAL_WEAPONS = [
-  // Left Arc (indices 0 to 4)
-  { id: 'chakra', code: 'CHAKRA', bengali: 'চক্র', icon: svgIcons.chakra, arc: 'left' },
-  { id: 'trident', code: 'TRIDENT', bengali: 'ত্রিশূল', icon: svgIcons.trident, arc: 'left' },
-  { id: 'sword', code: 'SWORD', bengali: 'খড়্গ', icon: svgIcons.sword, arc: 'left' },
-  { id: 'thunderbolt', code: 'THUNDERBOLT', bengali: 'বজ্র', icon: svgIcons.thunderbolt, arc: 'left' },
-  { id: 'lotus', code: 'LOTUS', bengali: 'পদ্ম', icon: svgIcons.lotus, arc: 'left' },
-
-  // Right Arc (indices 5 to 9)
-  { id: 'conch', code: 'CONCH', bengali: 'শঙ্খ', icon: svgIcons.conch, arc: 'right' },
-  { id: 'spear', code: 'SPEAR', bengali: 'শক্তি/বর্শা', icon: svgIcons.spear, arc: 'right' },
-  { id: 'bow', code: 'BOW', bengali: 'ধনুর্বাণ', icon: svgIcons.bow, arc: 'right' },
-  { id: 'snake', code: 'SNAKE', bengali: 'সর্প', icon: svgIcons.snake, arc: 'right' },
-  { id: 'axe', code: 'AXE', bengali: 'কুঠার', icon: svgIcons.axe, arc: 'right' }
-];
-
 export function createTritiyaStage() {
   const container = document.createElement('div');
-  container.className = 'stage-container';
+  container.className = 'stage-container stage4-container';
+
+  // Canonical sequence — never randomized
+  const LEFT = ['CHAKRA', 'TRIDENT', 'SWORD', 'THUNDERBOLT', 'LOTUS'];
+  const RIGHT = ['CONCH', 'SPEAR', 'BOW', 'SNAKE', 'AXE'];
+  const ALL = Object.freeze([...LEFT, ...RIGHT]);
+
+  // Display only. Never used for comparison.
+  const LABEL_BN = Object.freeze({
+    CHAKRA: 'চক্র',
+    TRIDENT: 'ত্রিশূল',
+    SWORD: 'তরবারি',
+    THUNDERBOLT: 'বজ্র',
+    LOTUS: 'পদ্ম',
+    CONCH: 'শঙ্খ',
+    SPEAR: 'বর্শা',
+    BOW: 'ধনুক',
+    SNAKE: 'সাপ',
+    AXE: 'কুড়াল',
+  });
+  const bn = key => LABEL_BN[key] ?? key; // falls back to the key if one is missing
 
   // Header
   const header = document.createElement('div');
   header.className = 'stage-header-block';
   header.innerHTML = `
-    <h2 class="stage-title">শুক্লা তৃতীয়া</h2>
-    <p class="stage-subtitle">মায়ের অস্ত্র</p>
-    <p class="stage-instruction">দশপ্রহরণধারিণীর দশটি অস্ত্রের মধ্যে যে দুটি অনুপস্থিত (?) তা চিহ্নিত করুন</p>
+    <h3 class="stage-title">দশপ্রহরণধারিণী</h3>
+    <p id="stage4-status" class="stage-instruction" aria-live="polite">❓চিহ্নিত হাত দুটোতে কোন অস্ত্র দুটো দিই বলুন তো ... 🤔 আপনিই বরং ওই নিচে রাখা অস্ত্র গুলো থেকে পড়িয়ে দিন</p>
   `;
 
-  const board = document.createElement('div');
-  board.className = 'weapons-board';
+  // Arena with Hub
+  const arena = document.createElement('div');
+  arena.id = 'arena';
+  arena.innerHTML = `<div id="hub">ॐ</div>`;
 
-  const arcsWrapper = document.createElement('div');
-  arcsWrapper.className = 'weapon-arcs-wrapper';
+  // Chips Tray
+  const tray = document.createElement('div');
+  tray.id = 'tray';
+  tray.setAttribute('aria-label', 'Weapon chips');
 
-  const leftArcCol = document.createElement('div');
-  leftArcCol.className = 'weapon-arc';
-  leftArcCol.innerHTML = `<span class="arc-header">বাম হস্তের অস্ত্র (Left Arc)</span>`;
-  const leftSlotsRow = document.createElement('div');
-  leftSlotsRow.className = 'weapon-slots-row';
-  leftArcCol.appendChild(leftSlotsRow);
+  // Bar with Misses and New Attempt
+  const bar = document.createElement('div');
+  bar.className = 'bar';
+  bar.innerHTML = `
+    <span>তেমন কিছু না ... <b id="stage4-misses">0</b> বার চেষ্টা করা যেতেই পারে!</span>
+    <!--<button id="stage4-again" type="button">New attempt</button>-->
+  `;
 
-  const rightArcCol = document.createElement('div');
-  rightArcCol.className = 'weapon-arc';
-  rightArcCol.innerHTML = `<span class="arc-header">ডান হস্তের অস্ত্র (Right Arc)</span>`;
-  const rightSlotsRow = document.createElement('div');
-  rightSlotsRow.className = 'weapon-slots-row';
-  rightArcCol.appendChild(rightSlotsRow);
-
-  arcsWrapper.appendChild(leftArcCol);
-  arcsWrapper.appendChild(rightArcCol);
-
-  // 10 Weapon Chips Pool
-  const chipsPool = document.createElement('div');
-  chipsPool.className = 'weapon-chips-pool';
-
-  const feedbackArea = document.createElement('div');
-  feedbackArea.className = 'feedback-msg';
-  feedbackArea.id = 'tritiya-feedback';
-
+  // Action Area for Continue button upon completion
   const actionArea = document.createElement('div');
   actionArea.id = 'stage4-action-area';
 
-  board.appendChild(arcsWrapper);
-  board.appendChild(chipsPool);
-  board.appendChild(feedbackArea);
-
   container.appendChild(header);
-  container.appendChild(board);
+  container.appendChild(arena);
+  container.appendChild(tray);
+  container.appendChild(bar);
   container.appendChild(actionArea);
 
-  // Pick exactly 2 random distinct indices among 0..9 for the missing positions
-  const missingIndices = [];
-  while (missingIndices.length < 2) {
-    const r = Math.floor(Math.random() * 10);
-    if (!missingIndices.includes(r)) {
-      missingIndices.push(r);
+  const statusEl = header.querySelector('#stage4-status');
+  const missesEl = bar.querySelector('#stage4-misses');
+  const hub = arena.querySelector('#hub');
+  // const againBtn = bar.querySelector('#stage4-again');
+
+  let slots = [];          // slot elements, index = canonical position
+  let missing = new Set(); // exactly 2 indices
+  let filled = new Set();
+  let misses = 0;
+  let done = false;
+  let selected = null;     // click-to-place fallback
+
+  function shuffle(a) {
+    const arr = a.slice();
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  // Two small arcs facing each other: ( ) shapes, 5 positions each.
+  function layout() {
+    slots.forEach((el, i) => {
+      const side = i < 5 ? 0 : 1;
+      const k = i % 5;
+      const t = (k - 2) / 2;                       // -1 … 1
+      const bulge = 0.085 * t * t;                 // ends curve toward the centre
+      const x = side === 0 ? 0.20 + bulge : 0.80 - bulge;
+      const y = 0.5 + t * 0.37;
+      el.style.left = (x * 100) + '%';
+      el.style.top = (y * 100) + '%';
+    });
+  }
+
+  function newRound() {
+    done = false;
+    filled = new Set();
+    misses = 0;
+    selected = null;
+    missesEl.textContent = '0';
+    hub.classList.remove('done');
+    tray.classList.remove('done');
+    actionArea.innerHTML = '';
+
+    // pick exactly 2 random missing positions
+    const idx = shuffle([...Array(10).keys()]);
+    missing = new Set(idx.slice(0, 2));
+
+    arena.querySelectorAll('.slot').forEach(s => s.remove());
+    slots = ALL.map((name, i) => {
+      const el = document.createElement('div');
+      el.className = 'slot ' + (missing.has(i) ? 'missing' : 'sealed');
+      el.dataset.i = i;
+      el.style.setProperty('--i', i);
+      el.setAttribute('aria-label', missing.has(i) ? 'Missing weapon position' : 'Sealed weapon position');
+      el.innerHTML = '<span class="label"></span>';
+      if (missing.has(i)) el.insertAdjacentText('afterbegin', '?');
+      el.addEventListener('click', () => { if (selected) attempt(selected, el); });
+      arena.appendChild(el);
+      return el;
+    });
+    layout();
+
+    // all 10 chips (tray order is shuffled; the canonical sequence is untouched)
+    tray.innerHTML = '';
+    shuffle(ALL).forEach(name => {
+      const c = document.createElement('div');
+      c.className = 'chip';
+      c.textContent = bn(name);
+      c.dataset.w = name;
+      c.setAttribute('role', 'button');
+      c.setAttribute('tabindex', '0');
+      c.addEventListener('pointerdown', e => startDrag(c, e));
+      c.addEventListener('contextmenu', e => e.preventDefault());
+      c.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectChip(c);
+        }
+      });
+      tray.appendChild(c);
+    });
+
+    statusEl.innerHTML = '❓চিহ্নিত হাত দুটোতে কোন অস্ত্র দুটো দিই বলুন তো 🤔<br/>আপনিই বরং ওই নিচে রাখা অস্ত্র গুলো থেকে পড়িয়ে দিন';
+  }
+
+  function selectChip(c) {
+    if (done || c.classList.contains('used')) return;
+    const was = c.classList.contains('selected');
+    tray.querySelectorAll('.chip.selected').forEach(chipEl => chipEl.classList.remove('selected'));
+    selected = was ? null : c;
+    if (selected) c.classList.add('selected');
+  }
+
+  /* ---------- drag handling (mouse + touch) ---------- */
+  function startDrag(chip, e) {
+    if (done || chip.classList.contains('used')) return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    e.preventDefault();
+
+    const pid = e.pointerId;
+    const isTouch = e.pointerType !== 'mouse';
+    const THRESHOLD = isTouch ? 10 : 6;
+    const LIFT = isTouch ? 56 : 0;          // keep the ghost visible above the finger
+    const sx = e.clientX, sy = e.clientY;
+    let moved = false, ghost = null, over = null;
+
+    try { chip.setPointerCapture(pid); } catch (_) { }
+
+    function move(ev) {
+      if (ev.pointerId !== pid) return;
+      if (!moved && Math.hypot(ev.clientX - sx, ev.clientY - sy) > THRESHOLD) {
+        moved = true;
+        ghost = chip.cloneNode(true);
+        ghost.classList.add('ghost');
+        document.body.appendChild(ghost);
+        chip.classList.add('dragging');
+      }
+      if (!moved) return;
+      const gx = ev.clientX, gy = ev.clientY - LIFT;
+      ghost.style.left = gx + 'px';
+      ghost.style.top = gy + 'px';
+      const s = slotAt(gx, gy);
+      if (over && over !== s) over.classList.remove('over');
+      over = s;
+      if (s && s.classList.contains('missing') && !s.classList.contains('filled')) {
+        s.classList.add('over');
+      }
+    }
+
+    function end(ev) {
+      if (ev.pointerId !== pid) return;
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', end);
+      window.removeEventListener('pointercancel', end);
+      try { chip.releasePointerCapture(pid); } catch (_) { }
+      if (over) over.classList.remove('over');
+      chip.classList.remove('dragging');
+      if (ghost) ghost.remove();
+
+      if (ev.type === 'pointercancel') return;   // a cancelled touch is not a drop
+
+      if (moved) {
+        const s = slotAt(ev.clientX, ev.clientY - LIFT);
+        if (s) attempt(chip, s);
+      } else {
+        selectChip(chip);                         // plain tap: select, then tap a ?
+      }
+    }
+
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', end);
+    window.addEventListener('pointercancel', end);
+  }
+
+  // Nearest slot within a forgiving radius (instead of an exact elementFromPoint hit)
+  function slotAt(x, y) {
+    let best = null, bestD = Infinity;
+    for (const s of slots) {
+      const r = s.getBoundingClientRect();
+      const d = Math.hypot(x - (r.left + r.width / 2), y - (r.top + r.height / 2));
+      if (d < bestD) { best = s; bestD = d; }
+    }
+    if (!best) return null;
+    return bestD <= best.getBoundingClientRect().width * 0.75 ? best : null;
+  }
+
+  function attempt(chip, slot) {
+    if (done) return;
+    const i = +slot.dataset.i;
+    const word = chip.dataset.w;
+    if (!missing.has(i) || filled.has(i)) return wrong(slot);
+    if (ALL[i] !== word) return wrong(slot);
+
+    filled.add(i);
+    slot.classList.add('filled');
+    slot.classList.remove('over');
+    if (slot.firstChild && slot.firstChild.nodeType === 3) {
+      slot.removeChild(slot.firstChild); // drop the "?"
+    }
+    slot.querySelector('.label').textContent = bn(word);
+    chip.classList.remove('selected');
+    chip.classList.add('used');
+    selected = null;
+
+    if (filled.size === missing.size) {
+      complete();
+    } else {
+      statusEl.textContent = 'দারুন! আর একটা মাত্র বাকি ...';
     }
   }
 
-  // Solved missing slots tracking: map missingIndex -> weaponCode placed
-  const filledMissingSlots = {};
-  let selectedChipCode = null;
-  let isCompleted = false;
+  function wrong(slot) {
+    misses++;
+    missesEl.textContent = misses;
+    slot.classList.remove('shake');
+    void slot.offsetWidth; // re-trigger animation
+    slot.classList.add('shake');
+    setTimeout(() => slot.classList.remove('shake'), 450);
+    statusEl.textContent = 'ওহ! এটা তো ঠিক হল না ... আবার চেষ্টা করুন';
+  }
 
-  function checkCompletion() {
-    const allFilledCorrect = missingIndices.every(idx => {
-      const canonical = CANONICAL_WEAPONS[idx];
-      return filledMissingSlots[idx] === canonical.code;
+  function complete() {
+    done = true;
+    selected = null;
+    tray.querySelectorAll('.chip.selected').forEach(c => c.classList.remove('selected'));
+    slots.forEach((el, i) => {
+      el.querySelector('.label').textContent = bn(ALL[i]);
+      el.classList.remove('missing', 'sealed');
+      el.classList.add('revealed');
     });
+    hub.classList.add('done');
+    tray.classList.add('done');
+    for (let r = 0; r < 3; r++) {
+      setTimeout(() => {
+        const ring = document.createElement('div');
+        ring.className = 'ring';
+        arena.appendChild(ring);
+        setTimeout(() => ring.remove(), 2300);
+      }, r * 450);
+    }
+    statusEl.textContent = 'মা দশভুজার অলৌকিক আভা দশদিকে প্রকাশিত ... জয় মা দূর্গা';
 
-    if (allFilledCorrect && !isCompleted) {
-      isCompleted = true;
-      feedbackArea.textContent = 'দশভুজার সকল অস্ত্র তেজস্ক্রিয় জ্যোতিতে উদ্ভাসিত!';
-      renderSlots();
-      renderChips();
+    // Agomoni Progression
+    gameState.completeStage(4);
 
-      gameState.completeStage(4);
-
+    setTimeout(() => {
       actionArea.innerHTML = `
         <div class="stage-banner">
-          <p class="stage-banner-text">মায়ের শক্তি সম্পূর্ণ।</p>
-          <p class="stage-banner-sub">মা আরও একটু কাছে...</p>
+          <p class="stage-banner-sub">ঢাকে কাঠি পড়লো বলে ... আগমনী আর বেশি দূরে নয়</p>
           <button class="btn-continue" id="stage4-continue-btn">
-            <span>পরের ধাপ</span>
             ${svgIcons.arrowRight}
           </button>
         </div>
@@ -115,105 +302,20 @@ export function createTritiyaStage() {
       actionArea.querySelector('#stage4-continue-btn').addEventListener('click', () => {
         gameState.nextStage();
       });
-    }
+    }, 2000);
   }
 
-  function handleSlotClick(idx) {
-    if (isCompleted || !missingIndices.includes(idx)) return;
+  //againBtn.addEventListener('click', newRound);
+  window.addEventListener('resize', layout);
 
-    if (selectedChipCode) {
-      const canonical = CANONICAL_WEAPONS[idx];
-      if (selectedChipCode === canonical.code) {
-        filledMissingSlots[idx] = selectedChipCode;
-        feedbackArea.textContent = `সঠিক! ${canonical.code} প্রতিষ্ঠিত হয়েছে।`;
-        selectedChipCode = null;
-        renderSlots();
-        renderChips();
-        checkCompletion();
-      } else {
-        feedbackArea.textContent = 'এই স্থানে অস্ত্রটির রূপ ভিন্ন... অন্যটি নির্বাচন করুন।';
-      }
-    } else {
-      feedbackArea.textContent = 'নিচের অস্ত্রপট্টিকা থেকে একটি নাম নির্বাচন করুন।';
-    }
-  }
+  // Initialize
+  newRound();
 
-  function renderSlots() {
-    leftSlotsRow.innerHTML = '';
-    rightSlotsRow.innerHTML = '';
-
-    CANONICAL_WEAPONS.forEach((weapon, idx) => {
-      const isMissing = missingIndices.includes(idx);
-      const isSolved = isCompleted || filledMissingSlots[idx] === weapon.code;
-      const slot = document.createElement('div');
-      slot.className = `weapon-slot ${isMissing && !isSolved ? 'missing' : ''} ${isSolved ? 'solved' : ''}`;
-      slot.setAttribute('data-index', idx);
-      slot.setAttribute('role', 'button');
-      slot.setAttribute('tabindex', isMissing ? '0' : '-1');
-
-      if (isMissing && !isSolved) {
-        slot.textContent = '?';
-        slot.title = 'Missing Weapon Position. Tap to fill';
-      } else {
-        // Display weapon icon only, NEVER displaying weapon name text inside positions!
-        slot.innerHTML = weapon.icon;
-        slot.title = isCompleted ? weapon.code : 'Weapon Slot';
-      }
-
-      slot.addEventListener('click', () => handleSlotClick(idx));
-      slot.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          handleSlotClick(idx);
-        }
-      });
-
-      if (idx < 5) {
-        leftSlotsRow.appendChild(slot);
-      } else {
-        rightSlotsRow.appendChild(slot);
-      }
-    });
-  }
-
-  function renderChips() {
-    chipsPool.innerHTML = '';
-    CANONICAL_WEAPONS.forEach(weapon => {
-      const chip = document.createElement('button');
-      const isUsed = Object.values(filledMissingSlots).includes(weapon.code);
-      const isSelected = selectedChipCode === weapon.code;
-
-      chip.className = `weapon-chip ${isSelected ? 'selected' : ''} ${isUsed ? 'used' : ''}`;
-      chip.textContent = weapon.code;
-      chip.setAttribute('aria-label', `Select weapon chip ${weapon.code}`);
-
-      if (!isUsed && !isCompleted) {
-        chip.addEventListener('click', () => {
-          if (selectedChipCode === weapon.code) {
-            selectedChipCode = null;
-          } else {
-            selectedChipCode = weapon.code;
-          }
-          renderChips();
-        });
-      }
-
-      chipsPool.appendChild(chip);
-    });
-  }
-
-  // Check if stage 4 was already completed in state
+  // If already completed in state, show continue action area directly while allowing replay
   const { completedStages } = gameState.getState();
   if (completedStages.includes(4)) {
-    missingIndices.forEach(idx => {
-      filledMissingSlots[idx] = CANONICAL_WEAPONS[idx].code;
-    });
-    setTimeout(() => {
-      checkCompletion();
-    }, 100);
-  } else {
-    renderSlots();
-    renderChips();
+    // Reveal all directly
+    complete();
   }
 
   return container;

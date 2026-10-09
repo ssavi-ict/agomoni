@@ -19,8 +19,12 @@
 - **Deployment:** GitHub Pages workflow `.github/workflows/deploy.yml` and relative base path.
 
 ## Latest Meaningful Changes
-- Built complete game shell, 6 stages, SVG artwork, and automated test suite (`tests/game.test.js`).
-- Verified production build and test suite pass (100% green).
+- Integrated downloaded high-resolution images in `public/assets/images/`:
+  - Stage 2: horse, elephant, palanquin, boat.
+  - Stage 3: Lord Ganesha, Ma Lokkhi, Ma Durga, Ma Saraswati, Lord Kartikey.
+  - Stage 5 & 6: final image of Maa Durga (`durga_final.png`) for puja culmination and Bodhan reveal.
+- Overhauled Stage 4 (Shukla Tritiya) with dedicated "Weaponize Ma Durga" arena, ॐ central hub, 2 opposing arcs of 5 slots, sealed medallions, missing ? slots, interactive chips tray with drag-and-drop & tap fallback, ripple effects, misses tracker, and new attempt capability.
+- Re-verified test suite (100% green) and production build.
 
 ## Known Issues
 - None.

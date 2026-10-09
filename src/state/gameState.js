@@ -111,6 +111,7 @@ class GameStateStore {
   resetGame() {
     this.state.currentStage = 1;
     this.state.completedStages = [];
+    this.state.restartCount = (this.state.restartCount || 0) + 1;
     this.saveState();
     this.notify();
   }

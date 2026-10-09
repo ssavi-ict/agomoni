@@ -2,6 +2,7 @@
 import { gameState } from '../state/gameState.js';
 import { createHeader } from './Header.js';
 import { createFooter } from './Footer.js';
+import { showIntroOverlay } from '../stages/introOverlay.js';
 import { createMahalayaStage } from '../stages/Stage1Mahalaya.js';
 import { createPratipadStage } from '../stages/Stage2Pratipad.js';
 import { createDwitiyaStage } from '../stages/Stage3Dwitiya.js';
@@ -34,40 +35,53 @@ export function createGameShell() {
   container.appendChild(footer);
 
   let currentRenderedStage = null;
+  let lastRestartCount = null;
 
-  function renderCurrentStage(stageNum) {
-    if (currentRenderedStage === stageNum) return;
+  function mountStage(stageNode) {
+    if (!stageNode) return;
+    stageNode.style.animation = 'fadeIn 0.4s ease forwards';
+    stageArea.appendChild(stageNode);
+  }
+
+  // Stage 1 is only built once the player clicks "যাত্রা শুরু করুন" on the intro overlay.
+  // The click is a real user gesture, so Stage 1's audio can play right away.
+  function startStage1WithIntro() {
+    showIntroOverlay({
+      onStart: () => {
+        // Ignore the click if the game moved on to another stage in the meantime
+        if (currentRenderedStage !== 1) return;
+        stageArea.innerHTML = '';
+        mountStage(createMahalayaStage());
+      },
+    });
+  }
+
+  function renderCurrentStage(stageNum, restartCount = 0) {
+    if (currentRenderedStage === stageNum && lastRestartCount === restartCount) return;
     currentRenderedStage = stageNum;
+    lastRestartCount = restartCount;
 
     stageArea.innerHTML = '';
-    let stageNode = null;
 
     switch (stageNum) {
-      case 1:
-        stageNode = createMahalayaStage();
-        break;
       case 2:
-        stageNode = createPratipadStage();
+        mountStage(createPratipadStage());
         break;
       case 3:
-        stageNode = createDwitiyaStage();
+        mountStage(createDwitiyaStage());
         break;
       case 4:
-        stageNode = createTritiyaStage();
+        mountStage(createTritiyaStage());
         break;
       case 5:
-        stageNode = createChaturthiStage();
+        mountStage(createChaturthiStage());
         break;
       case 6:
-        stageNode = createPanchamiStage();
+        mountStage(createPanchamiStage());
         break;
+      case 1:
       default:
-        stageNode = createMahalayaStage();
-    }
-
-    if (stageNode) {
-      stageNode.style.animation = 'fadeIn 0.4s ease forwards';
-      stageArea.appendChild(stageNode);
+        startStage1WithIntro();
     }
   }
 
@@ -76,7 +90,7 @@ export function createGameShell() {
     document.documentElement.setAttribute('data-theme', state.theme);
 
     // Render stage if changed
-    renderCurrentStage(state.currentStage);
+    renderCurrentStage(state.currentStage, state.restartCount || 0);
   }
 
   gameState.subscribe(handleStateChange);

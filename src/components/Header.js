@@ -2,6 +2,7 @@
 import { gameState } from '../state/gameState.js';
 import { createThemeToggle } from './ThemeToggle.js';
 import { createAudioToggle } from './AudioToggle.js';
+import { createRestartButton } from './Restart.js';
 
 export function createHeader() {
   const header = document.createElement('header');
@@ -12,7 +13,6 @@ export function createHeader() {
   brandSection.className = 'brand-section';
   brandSection.innerHTML = `
     <div class="brand-title">
-      <span>Agomoni</span>
       <span class="bengali-title">আগমনী</span>
     </div>
   `;
@@ -24,7 +24,7 @@ export function createHeader() {
 
   const label = document.createElement('span');
   label.className = 'journey-label';
-  label.textContent = "Maa's Journey";
+  label.textContent = "অগ্রগতি";
 
   const dotsContainer = document.createElement('div');
   dotsContainer.className = 'progress-dots';
@@ -40,9 +40,12 @@ export function createHeader() {
   journeyProgress.appendChild(label);
   journeyProgress.appendChild(dotsContainer);
 
+  const restartBtn = createRestartButton();
+
   // Right Header Controls (Mute & Night Mode)
   const controls = document.createElement('div');
   controls.className = 'header-controls';
+  controls.appendChild(restartBtn);
   controls.appendChild(createAudioToggle());
   controls.appendChild(createThemeToggle());
 
