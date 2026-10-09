@@ -3,3 +3,8 @@ dist
 dist-ssr
 *.local
 .DS_Store
+
+# Environment secrets — never commit these
+.env
+.env.*
+!.env.example

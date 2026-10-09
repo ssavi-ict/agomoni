@@ -1,15 +1,16 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, get, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
+// Credentials are loaded from .env (never committed to git)
 const firebaseConfig = {
-  apiKey: "AIzaSyCkFXJ-2nankK4Bib1doqaFcHmweZnNaqk",
-  authDomain: "cracktech-ext.firebaseapp.com",
-  databaseURL: "https://cracktech-ext-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "cracktech-ext",
-  storageBucket: "cracktech-ext.firebasestorage.app",
-  messagingSenderId: "259670715226",
-  appId: "1:259670715226:web:bd19df5311b8eb61f12163",
-  measurementId: "G-ZS662YT2YD"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
