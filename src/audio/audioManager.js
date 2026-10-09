@@ -58,7 +58,7 @@ class AudioManager {
       const gain = context.createGain();
       source.connect(gain);
       gain.connect(context.destination);
-      const nodes = { source, gain };
+      const nodes = { source, gain, volume: 1 };
       this.audioNodes.set(audio, nodes);
       return nodes;
     } catch (err) {
@@ -89,35 +89,64 @@ class AudioManager {
     }
   }
 
-  fadeOut(key, durationMs = 2000) {
+  fadeTo(key, targetVolume, durationMs = 2000, stopWhenComplete = false) {
     const audio = this.activeAudiosByKey.get(key);
     if (!audio || audio.paused || durationMs <= 0) return;
 
-    this.clearFade(audio);
     const nodes = this.audioNodes.get(audio);
+    const now = nodes ? this.audioContext.currentTime : Date.now();
+    const currentFade = this.fadeTimers.get(audio);
+    const progress = currentFade
+      ? Math.min((now - currentFade.startTime) / currentFade.duration, 1)
+      : 1;
+    const endVolume = Math.min(Math.max(targetVolume, 0), 1);
+    const startVolume = currentFade
+      ? currentFade.startVolume + (currentFade.targetVolume - currentFade.startVolume) * progress
+      : nodes ? nodes.volume : audio.volume;
+
+    this.clearFade(audio);
     if (nodes) {
       const { gain } = nodes;
-      const now = this.audioContext.currentTime;
-      const startVolume = gain.gain.value;
       gain.gain.cancelScheduledValues(now);
       gain.gain.setValueAtTime(startVolume, now);
-      gain.gain.linearRampToValueAtTime(0, now + durationMs / 1000);
+      gain.gain.linearRampToValueAtTime(endVolume, now + durationMs / 1000);
       const timeoutId = setTimeout(() => {
         this.fadeTimers.delete(audio);
-        this.stopAudio(audio);
+        nodes.volume = endVolume;
+        if (stopWhenComplete) this.stopAudio(audio);
       }, durationMs);
-      this.fadeTimers.set(audio, { timeoutId, intervalId: null });
+      this.fadeTimers.set(audio, {
+        timeoutId,
+        intervalId: null,
+        startTime: now,
+        duration: durationMs / 1000,
+        startVolume,
+        targetVolume: endVolume,
+      });
       return;
     }
 
-    const startVolume = audio.volume;
-    const startTime = Date.now();
+    const startTime = now;
     const intervalId = setInterval(() => {
       const progress = Math.min((Date.now() - startTime) / durationMs, 1);
-      audio.volume = startVolume * (1 - progress);
-      if (progress === 1) this.stopAudio(audio);
+      audio.volume = startVolume + (endVolume - startVolume) * progress;
+      if (progress === 1) {
+        this.clearFade(audio);
+        if (stopWhenComplete) this.stopAudio(audio);
+      }
     }, 50);
-    this.fadeTimers.set(audio, { timeoutId: null, intervalId });
+    this.fadeTimers.set(audio, {
+      timeoutId: null,
+      intervalId,
+      startTime,
+      duration: durationMs,
+      startVolume,
+      targetVolume: endVolume,
+    });
+  }
+
+  fadeOut(key, durationMs = 2000) {
+    this.fadeTo(key, 0, durationMs, true);
   }
 
   stopAudio(audio) {

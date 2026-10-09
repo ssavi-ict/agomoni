@@ -185,7 +185,7 @@ export function createChaturthiStage() {
     if (currentStep === 0) {
       currentStep = 1;
       feedbackArea.textContent = 'প্রদীপের আলোয় বেদী আলোকিত হলো...';
-      audioManager.fadeOut('mahalaya', 2000);
+      audioManager.fadeTo('mahalaya', 0.2, 2000);
       audioManager.playDiya();
     } else {
       // Re-lighting if already done or out of turn
@@ -206,6 +206,7 @@ export function createChaturthiStage() {
     if (currentStep === 1) {
       currentStep = 2;
       feedbackArea.textContent = 'শঙ্খধ্বনিতে দেবীর আবাহন ধ্বনিত হলো...';
+      audioManager.fadeOut('mahalaya', 2000);
       audioManager.playConch();
     } else if (currentStep === 0) {
       feedbackArea.textContent = 'প্রথমে মণ্ডপে মঙ্গলপ্রদীপ প্রজ্জ্বলন করুন...';

@@ -1,7 +1,8 @@
 ## 2026-10-10 — Mahalaya to Diya Audio Fade
 - **What changed:**
-  - Track active audio elements by sound key and add a track-specific fade-out operation.
-  - Fade Mahalaya to silence over two seconds when the first Stage 5 Diya interaction occurs, while starting Diya immediately.
+  - Track active audio elements by sound key and support track-specific volume fades.
+  - Fade Mahalaya to 20% volume over two seconds when the first Stage 5 Diya interaction occurs, while starting Diya immediately.
+  - Keep Mahalaya playing quietly beneath the Stage 5 sounds, then fade it to silence over two seconds when Conch is triggered.
   - Use a Web Audio gain ramp where available, with media-volume fade fallback; preserve immediate stop behavior for other stage transitions.
 - **Files/components affected:** `src/audio/audioManager.js`, `src/stages/Stage5Chaturthi.js`, `tests/game.test.js`, `AI_CONTEXT/CURRENT_STATE.md`, `AI_CONTEXT/TODO.md`, `AI_CONTEXT/CHANGELOG_AI.md`.
 - **Known issues:** None.

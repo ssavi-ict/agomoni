@@ -22,7 +22,7 @@ global.window = {
         value: 1,
         cancelScheduledValues(time) { audioGainEvents.push({ type: 'cancel', time }); },
         setValueAtTime(value, time) { this.value = value; audioGainEvents.push({ type: 'set', value, time }); },
-        linearRampToValueAtTime(value, time) { audioGainEvents.push({ type: 'ramp', value, time }); },
+        linearRampToValueAtTime(value, time) { this.value = value; audioGainEvents.push({ type: 'ramp', value, time }); },
         exponentialRampToValueAtTime() {},
       };
       return { gain, connect() {}, disconnect() {} };
@@ -107,24 +107,38 @@ await Promise.all([
 ]);
 const mahalayaAudio = audioManager.activeAudiosByKey.get('mahalaya');
 assert.ok(mahalayaAudio && !mahalayaAudio.paused, 'Mahalaya should be tracked while it is playing');
-let finishMahalayaFade;
-let fadeDuration;
+const pendingTimeouts = new Map();
+const fadeDurations = [];
+let nextTimeoutId = 0;
 const originalSetTimeout = global.setTimeout;
 const originalClearTimeout = global.clearTimeout;
 global.setTimeout = (callback, delay) => {
-  finishMahalayaFade = callback;
-  fadeDuration = delay;
-  return 1;
+  const timeoutId = ++nextTimeoutId;
+  pendingTimeouts.set(timeoutId, callback);
+  fadeDurations.push(delay);
+  return timeoutId;
 };
-global.clearTimeout = () => {};
-audioManager.fadeOut('mahalaya', 2000);
-assert.strictEqual(fadeDuration, 2000, 'Mahalaya fade should last two seconds');
-assert.ok(audioGainEvents.some(event => event.type === 'ramp' && event.value === 0 && event.time === 2), 'Mahalaya gain should ramp to silence over two seconds');
+global.clearTimeout = timeoutId => pendingTimeouts.delete(timeoutId);
+audioManager.fadeTo('mahalaya', 0.2, 2000);
+assert.strictEqual(fadeDurations[0], 2000, 'Mahalaya should take two seconds to fade to its quiet background level');
+assert.ok(audioGainEvents.some(event => event.type === 'ramp' && event.value === 0.2 && event.time === 2), 'Mahalaya gain should ramp to 20 percent over two seconds');
 assert.strictEqual(mahalayaAudio.paused, false, 'Mahalaya should keep playing during the fade');
 await audioManager.playDiya();
 const diyaAudio = MockAudio.instances.find(audio => audio.src.endsWith('/diya.mp3'));
 assert.ok(diyaAudio && !diyaAudio.paused, 'Diya should start while Mahalaya is still fading');
-finishMahalayaFade();
+const diyaFadeCompletion = [...pendingTimeouts.entries()].at(-1);
+diyaFadeCompletion[1]();
+assert.strictEqual(mahalayaAudio.paused, false, 'Mahalaya should continue after fading to its quiet background level');
+assert.strictEqual(audioManager.activeAudiosByKey.get('mahalaya'), mahalayaAudio, 'Quiet Mahalaya should remain active under the Stage 5 sounds');
+audioManager.fadeOut('mahalaya', 2000);
+assert.strictEqual(fadeDurations[1], 2000, 'Mahalaya should fade out over two seconds when Conch is triggered');
+assert.ok(audioGainEvents.some(event => event.type === 'ramp' && event.value === 0 && event.time === 2), 'Mahalaya gain should ramp to silence on the Conch transition');
+assert.ok(audioGainEvents.some(event => event.type === 'set' && event.value === 0.2), 'The Conch fade should start from Mahalaya’s quiet background level');
+await audioManager.playConch();
+const conchAudio = MockAudio.instances.find(audio => audio.src.endsWith('/conch.mp3'));
+assert.ok(conchAudio && !conchAudio.paused, 'Conch should start immediately while Mahalaya fades out');
+const conchFadeCompletion = [...pendingTimeouts.entries()].at(-1);
+conchFadeCompletion[1]();
 global.setTimeout = originalSetTimeout;
 global.clearTimeout = originalClearTimeout;
 assert.strictEqual(mahalayaAudio.paused, true, 'Mahalaya should stop when its fade completes');
