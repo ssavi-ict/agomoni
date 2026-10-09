@@ -24,6 +24,8 @@ function hasValidDatabaseUrl(value) {
 }
 
 let firebaseServicesPromise;
+let missingConfigReported = false;
+const stageLoadRequests = [];
 
 function getFirebaseServices() {
   if (!firebaseServicesPromise) {
@@ -34,6 +36,9 @@ function getFirebaseServices() {
       const app = appModule.initializeApp(firebaseConfig);
       const database = databaseModule.getDatabase(app);
       return { database, ...databaseModule };
+    }).catch((error) => {
+      firebaseServicesPromise = undefined;
+      throw error;
     });
   }
 
@@ -52,14 +57,20 @@ export class FirebaseVisitorCounterService extends VisitorCounterService {
     this.gameId = gameId;
   }
 
-  async getVisitorCount() {
+  async incrementVisitorCount() {
     if (!firebaseConfig.databaseURL) {
-      console.error('Firebase visitor counter is disabled: configure VITE_FIREBASE_DATABASE_URL in the deployment environment.');
+      if (!missingConfigReported) {
+        console.error('Firebase visitor counter is disabled: configure VITE_FIREBASE_DATABASE_URL in the deployment environment.');
+        missingConfigReported = true;
+      }
       return '000000';
     }
 
     if (!hasValidDatabaseUrl(firebaseConfig.databaseURL)) {
-      console.error('Firebase visitor counter is disabled: VITE_FIREBASE_DATABASE_URL must be a valid Firebase Realtime Database URL.');
+      if (!missingConfigReported) {
+        console.error('Firebase visitor counter is disabled: VITE_FIREBASE_DATABASE_URL must be a valid Firebase Realtime Database URL.');
+        missingConfigReported = true;
+      }
       return '000000';
     }
 
@@ -75,6 +86,30 @@ export class FirebaseVisitorCounterService extends VisitorCounterService {
       }
 
       return String(result.snapshot.val()).padStart(6, '0');
+    } catch (error) {
+      console.error('Firebase visitor counter error:', error);
+      return '000000';
+    }
+  }
+
+  recordStageLoad() {
+    const request = this.incrementVisitorCount();
+    stageLoadRequests.push(request);
+    return request;
+  }
+
+  async getVisitorCount() {
+    await Promise.all(stageLoadRequests);
+
+    if (!firebaseConfig.databaseURL || !hasValidDatabaseUrl(firebaseConfig.databaseURL)) {
+      return '000000';
+    }
+
+    try {
+      const { database, ref, get } = await getFirebaseServices();
+      const snapshot = await get(ref(database, `games/${this.gameId}/visitor_count`));
+      const count = snapshot.val();
+      return String(typeof count === 'number' && Number.isFinite(count) ? count : 0).padStart(6, '0');
     } catch (error) {
       console.error('Firebase visitor counter error:', error);
       return '000000';

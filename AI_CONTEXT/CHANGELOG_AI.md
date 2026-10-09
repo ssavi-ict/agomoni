@@ -1,3 +1,12 @@
+## 2026-10-09 — Count Stage Module Loads
+- **What changed:**
+  - Each of the six stage modules records an atomic visitor-counter increment at module evaluation.
+  - The footer now reads the shared total after stage-module increments settle instead of incrementing it itself.
+  - Documented the current static-import behavior: all six modules load together, so a page load adds six.
+- **Files/components affected:** `src/services/visitorCounterService.js`, all six `src/stages/Stage*.js` modules, `AI_CONTEXT/CURRENT_STATE.md`, `AI_CONTEXT/TODO.md`, `AI_CONTEXT/CHANGELOG_AI.md`.
+- **Known issues:** Counter increments require Firebase deployment configuration and Realtime Database rules permitting transactions at `games/agomoni26/visitor_count`.
+- **Next relevant task:** Configure Firebase in GitHub Actions if needed, redeploy, and verify the total increases by six per page load.
+
 ## 2026-10-09 — Increment Visitor Count on Every Page Visit
 - **What changed:**
   - Removed per-session visit suppression so each page visit executes an atomic Firebase Realtime Database transaction.
