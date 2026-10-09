@@ -25,8 +25,9 @@
 - [x] Subtle journey progress indicator (`Maa's Journey ● ● ○`).
 - [x] Night mode toggle honoring `prefers-color-scheme`.
 - [x] Visitor counter abstraction with placeholder implementation.
-- [x] GitHub Pages workflow (`.github/workflows/deploy.yml`).
+- [x] GitHub Pages workflow (`.github/workflows/deploy.yml`) builds from `main` and publishes static output to the `deploy` branch.
 
 ## P1 (Future Enhancements)
 - Connect `VisitorCounterService` to production Firebase / Firestore counter if requested.
 - Provide custom studio-recorded MP3 files in `public/assets/audio/` if licensed.
+- Configure GitHub Pages in repository settings to publish from `deploy` / root and verify the live site.

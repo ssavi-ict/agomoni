@@ -1,3 +1,12 @@
+## 2026-10-09 — Publish GitHub Pages from the `deploy` Branch
+- **What changed:**
+  - Updated `.github/workflows/deploy.yml` to build on pushes to `main` (or manual dispatch) and publish the generated `dist/` contents to the `deploy` branch.
+  - Changed workflow permissions to the minimum needed for publishing branch contents.
+  - Documented the remaining one-time GitHub Pages setting: select `deploy` / root as the Pages source.
+- **Files/components affected:** `.github/workflows/deploy.yml`, `AI_CONTEXT/CURRENT_STATE.md`, `AI_CONTEXT/TODO.md`, `AI_CONTEXT/CHANGELOG_AI.md`.
+- **Known issues:** GitHub Pages repository settings must be changed manually to use the `deploy` branch.
+- **Next relevant task:** Configure Pages to publish from `deploy` / root and verify the live site.
+
 ## 2026-10-04 — Image Assets Integration & Stage 4 Weaponize Ma Durga Overhaul
 - **What changed:**
   - Integrated high-quality images in `public/assets/images/`:

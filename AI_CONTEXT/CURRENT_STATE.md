@@ -16,7 +16,7 @@
 - **Theme:** Atmospheric Night Mode toggle with `prefers-color-scheme` support and `localStorage` persistence.
 - **State & Storage:** `agomoni-game-state` persisted to `localStorage` (currentStage, completedStages, theme, muted). Strictly completion-based.
 - **Visitor Counter:** Clean service abstraction (`VisitorCounterService`) with zero-padded format (`Visitors: 000000`). Ready for future Firebase integration.
-- **Deployment:** GitHub Pages workflow `.github/workflows/deploy.yml` and relative base path.
+- **Deployment:** GitHub Pages workflow `.github/workflows/deploy.yml` builds on `main` and publishes `dist/` to the `deploy` branch. Configure GitHub Pages to publish from `deploy` / root in repository settings.
 
 ## Latest Meaningful Changes
 - Integrated downloaded high-resolution images in `public/assets/images/`:
@@ -33,4 +33,4 @@
 - None.
 
 ## Next Recommended Task
-- Deploy to GitHub repository and activate GitHub Pages in repository settings.
+- Set GitHub Pages source to the `deploy` branch at `/(root)` in repository settings, then verify the published site.
