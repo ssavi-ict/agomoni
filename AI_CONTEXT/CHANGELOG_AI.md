@@ -1,3 +1,12 @@
+## 2026-10-09 — Increment Visitor Count on Every Page Visit
+- **What changed:**
+  - Removed per-session visit suppression so each page visit executes an atomic Firebase Realtime Database transaction.
+  - Lazily load Firebase only when a valid Firebase database URL exists; log configuration and database errors while preserving the `000000` fallback.
+  - Require valid numeric state for the shared counter, initializing an empty/malformed value at 1.
+- **Files/components affected:** `src/services/visitorCounterService.js`, `AI_CONTEXT/CURRENT_STATE.md`, `AI_CONTEXT/TODO.md`, `AI_CONTEXT/CHANGELOG_AI.md`.
+- **Known issues:** A live count still requires Firebase deployment configuration and database rules that allow the counter read/write transaction.
+- **Next relevant task:** Verify Firebase Actions configuration and Realtime Database rules, then deploy.
+
 ## 2026-10-04 — Image Assets Integration & Stage 4 Weaponize Ma Durga Overhaul
 - **What changed:**
   - Integrated high-quality images in `public/assets/images/`:

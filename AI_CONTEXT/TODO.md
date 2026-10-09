@@ -28,5 +28,5 @@
 - [x] GitHub Pages workflow (`.github/workflows/deploy.yml`).
 
 ## P1 (Future Enhancements)
-- Connect `VisitorCounterService` to production Firebase / Firestore counter if requested.
+- Ensure GitHub Actions has the Firebase Realtime Database URL and related `VITE_FIREBASE_*` configuration, and confirm Realtime Database rules permit the visitor counter transaction at `games/agomoni26/visitor_count`.
 - Provide custom studio-recorded MP3 files in `public/assets/audio/` if licensed.
