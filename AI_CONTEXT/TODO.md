@@ -15,6 +15,7 @@
 - [x] Build `vite.config.js` with `base: './'`.
 - [x] Implement `src/state/gameState.js` with localStorage persistence (`agomoni-game-state`).
 - [x] Implement `src/audio/audioManager.js` with safe fallbacks and mute toggle.
+- [x] Fade Mahalaya out over two seconds while the first Diya sound starts in Stage 5.
 - [x] Implement Stage 1: Mahalaya (Lamp to radio interaction & dawn illumination).
 - [x] Implement Stage 2: Shukla Pratipad (4 transports, Horse fixed correct choice).
 - [x] Implement Stage 3: Shukla Dwitiya (5 deities touch/drag reordering).
@@ -26,6 +27,7 @@
 - [x] Night mode toggle honoring `prefers-color-scheme`.
 - [x] Keep Stage 6 credit links readable in light and dark themes.
 - [x] Style footer credit text with accessible, theme-aware typography.
+- [x] Render the intro start-button arrow reliably across mobile browsers.
 - [x] Visitor counter abstraction with placeholder implementation.
 - [x] GitHub Pages workflow (`.github/workflows/deploy.yml`) builds from `main` and publishes static output to the `deploy` branch.
 

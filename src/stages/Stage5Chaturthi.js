@@ -178,7 +178,6 @@ export function createChaturthiStage() {
   // Diya interaction
   diyaCard.addEventListener('click', () => {
     if (isCompleted) return;
-    audioManager.stopAll();
     const flame = diyaCard.querySelector('#chaturthi-flame');
     if (flame) flame.style.opacity = '1';
     diyaCard.classList.add('activated');
@@ -186,6 +185,7 @@ export function createChaturthiStage() {
     if (currentStep === 0) {
       currentStep = 1;
       feedbackArea.textContent = 'প্রদীপের আলোয় বেদী আলোকিত হলো...';
+      audioManager.fadeOut('mahalaya', 2000);
       audioManager.playDiya();
     } else {
       // Re-lighting if already done or out of turn

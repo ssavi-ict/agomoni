@@ -1,3 +1,18 @@
+## 2026-10-10 — Mahalaya to Diya Audio Fade
+- **What changed:**
+  - Track active audio elements by sound key and add a track-specific fade-out operation.
+  - Fade Mahalaya to silence over two seconds when the first Stage 5 Diya interaction occurs, while starting Diya immediately.
+  - Use a Web Audio gain ramp where available, with media-volume fade fallback; preserve immediate stop behavior for other stage transitions.
+- **Files/components affected:** `src/audio/audioManager.js`, `src/stages/Stage5Chaturthi.js`, `tests/game.test.js`, `AI_CONTEXT/CURRENT_STATE.md`, `AI_CONTEXT/TODO.md`, `AI_CONTEXT/CHANGELOG_AI.md`.
+- **Known issues:** None.
+- **Next relevant task:** Verify the fade on target mobile browsers and speakers/headphones.
+
+## 2026-10-10 — Mobile Intro Button Arrow
+- **What changed:** Replaced the intro start button's text arrow glyph with an aria-hidden CSS arrow, avoiding font glyph issues on mobile.
+- **Files/components affected:** `src/stages/introOverlay.js`, `src/styles/intro.css`, `AI_CONTEXT/CURRENT_STATE.md`, `AI_CONTEXT/TODO.md`, `AI_CONTEXT/CHANGELOG_AI.md`.
+- **Known issues:** None.
+- **Next relevant task:** Verify on target mobile browsers.
+
 ## 2026-10-09 — Footer Credit Typography
 - **What changed:** Styled the footer credit with a slightly larger display font, clear project/author hierarchy, and theme-aware link colors.
 - **Files/components affected:** `src/components/Footer.js`, `src/styles/shell.css`, `AI_CONTEXT/CURRENT_STATE.md`, `AI_CONTEXT/TODO.md`, `AI_CONTEXT/CHANGELOG_AI.md`.
