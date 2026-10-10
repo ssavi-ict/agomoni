@@ -28,10 +28,13 @@
 - [x] Keep Stage 6 credit links readable in light and dark themes.
 - [x] Style footer credit text with accessible, theme-aware typography.
 - [x] Render the intro start-button arrow reliably across mobile browsers.
+- [x] Add canonical metadata, sitemap, robots rules, and basic social preview tags for search discovery.
 - [x] Visitor counter abstraction with placeholder implementation.
 - [x] GitHub Pages workflow (`.github/workflows/deploy.yml`) builds from `main` and publishes static output to the `deploy` branch.
 
 ## P1 (Future Enhancements)
+- Verify `https://aviksarkar.fyi/` in Google Search Console, add the provided verification meta tag, submit `/sitemap.xml`, and request indexing.
+- Add the live site as the GitHub repository website and add relevant repository topics.
 - Ensure GitHub Actions has the Firebase Realtime Database URL and related `VITE_FIREBASE_*` configuration, and confirm Realtime Database rules permit counter transactions for each entered stage and live reads at `games/agomoni26/visitor_count`.
 - Provide custom studio-recorded MP3 files in `public/assets/audio/` if licensed.
 - Configure GitHub Pages in repository settings to publish from `deploy` / root and verify the live site.

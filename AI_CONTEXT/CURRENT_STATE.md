@@ -19,6 +19,7 @@
 - **Deployment:** GitHub Pages workflow `.github/workflows/deploy.yml` and relative base path.
 
 ## Latest Meaningful Changes
+- Added canonical SEO metadata, social sharing tags, a root sitemap and `robots.txt`, and a semantic brand heading for search indexing.
 - Mahalaya now fades to a quiet background level when the first Diya is lit, continues beneath the Stage 5 sounds, then fades to silence when Conch is triggered.
 - Replaced the intro start button's unsupported arrow glyph with a CSS-drawn arrow for consistent mobile rendering.
 - Refined footer credit typography with a modestly larger display font and theme-aware link styling.

@@ -12,9 +12,9 @@ export function createHeader() {
   const brandSection = document.createElement('div');
   brandSection.className = 'brand-section';
   brandSection.innerHTML = `
-    <div class="brand-title">
+    <h1 class="brand-title">
       <span class="bengali-title">আগমনী</span>
-    </div>
+    </h1>
   `;
 
   // Center subtle Journey Progress: "Maa's Journey ● ● ● ○ ○ ○"
