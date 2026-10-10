@@ -77,6 +77,10 @@ body.intro-open {
 }
 
 .intro-start-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
     padding: 0.75rem 2rem;
     font-size: 1.05rem;
     font-family: inherit;
@@ -88,6 +92,36 @@ body.intro-open {
     box-shadow: 0 4px 14px rgba(212, 162, 76, 0.35);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
     margin-top: 30px;
+}
+
+.intro-start-arrow {
+    position: relative;
+    width: 1rem;
+    height: 0.75rem;
+    flex: 0 0 auto;
+}
+
+.intro-start-arrow::before {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 0.75rem;
+    height: 2px;
+    background: currentColor;
+    content: "";
+    transform: translateY(-50%);
+}
+
+.intro-start-arrow::after {
+    position: absolute;
+    top: 50%;
+    right: 1px;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-top: 2px solid currentColor;
+    border-right: 2px solid currentColor;
+    content: "";
+    transform: translateY(-50%) rotate(45deg);
 }
 
 .intro-start-btn:hover {

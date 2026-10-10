@@ -22,7 +22,7 @@ export function showIntroOverlay({ onStart } = {}) {
         <br/>যাত্রা শুরু হবে মহালয়ার ভোরে — রেডিওর কাঁটা ঘুরিয়ে মহিষাসুরমর্দ্দিনী খুঁজে নিয়ে।
       </p>
       <p class="intro-hint">🔊 ভালো অভিজ্ঞতার জন্য শব্দ চালু রাখুন</p>
-      <button type="button" class="intro-start-btn" id="intro-start-btn">শুরু ⮞</button>
+      <button type="button" class="intro-start-btn" id="intro-start-btn">শুরু <span class="intro-start-arrow" aria-hidden="true"></span></button>
     </div>
   `;
 
