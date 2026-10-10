@@ -1,3 +1,12 @@
+## 2026-10-10 — Search Discovery Basics
+- **What changed:**
+  - Added canonical, description, Open Graph, and Twitter card metadata for `https://aviksarkar.fyi/`.
+  - Added a semantic site heading and a no-JavaScript summary.
+  - Added root `robots.txt` and a one-page sitemap, plus the live site link to the repository README.
+- **Files/components affected:** `index.html`, `src/components/Header.js`, `README.md`, `public/robots.txt`, `public/sitemap.xml`, `AI_CONTEXT/CURRENT_STATE.md`, `AI_CONTEXT/TODO.md`, `AI_CONTEXT/CHANGELOG_AI.md`.
+- **Known issues:** Search Console ownership verification and indexing requests must be completed by the site owner; Google indexing is not guaranteed.
+- **Next relevant task:** Verify the site in Google Search Console, add its generated verification meta tag, and submit the sitemap.
+
 ## 2026-10-10 — Mahalaya to Diya Audio Fade
 - **What changed:**
   - Track active audio elements by sound key and support track-specific volume fades.

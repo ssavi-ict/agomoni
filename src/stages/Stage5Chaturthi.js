@@ -20,6 +20,57 @@ function pujaImg(key) {
                onerror="this.outerHTML=decodeURIComponent('${fallback}')">`;
 }
 
+// Big full-screen countdown overlay (Bengali digits).
+// Returns a function that removes the overlay and stops the timer.
+function startBodhonCountdown(seconds, actionArea, stageContainer) {
+  const bnDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+  const toBengali = (n) => String(n).replace(/\d/g, (d) => bnDigits[d]);
+
+  const banner = actionArea.querySelector('.stage5-completion-banner');
+
+  const overlay = document.createElement('div');
+  overlay.className = 'stage5-countdown-overlay';
+  overlay.setAttribute('aria-hidden', 'true');
+  const numberEl = document.createElement('span');
+  numberEl.className = 'stage5-countdown-number';
+  overlay.appendChild(numberEl);
+  // document.body.appendChild(overlay);
+  stageContainer.appendChild(overlay);
+
+  let remaining = seconds;
+  let intervalId = null;
+
+  const render = () => {
+    numberEl.textContent = toBengali(remaining);
+    numberEl.classList.remove('tick');
+    void numberEl.offsetWidth; // restart the pop animation
+    numberEl.classList.add('tick');
+  };
+
+  const cleanup = () => {
+    clearInterval(intervalId);
+    overlay.remove();
+  };
+
+  render();
+
+  intervalId = setInterval(() => {
+    // Banner already gone (e.g. the player left the stage) -> clean up
+    if (banner && !document.body.contains(banner)) {
+      cleanup();
+      return;
+    }
+    if (remaining > 1) {
+      remaining -= 1;
+      render();
+    } else {
+      clearInterval(intervalId); // holds on ১ until navigation fires
+    }
+  }, 1000);
+
+  return cleanup;
+}
+
 export function createChaturthiStage() {
   const container = document.createElement('div');
   container.className = 'stage-container';
@@ -133,42 +184,14 @@ export function createChaturthiStage() {
           <!-- <button class="btn-continue" id="stage5-continue-btn">
             ${svgIcons.arrowRight}
           </button> -->
-          <p class="stage5-bodhon-note">
-            আরে ... চললেন কোথায়? মায়ের বোধন টা যে এখনো বাকি ...
-            <span class="stage5-bodhon-timer" id="stage5-bodhon-timer">১০</span>
-          </p>
+          <p class="stage5-bodhon-note">আরে ... চললেন কোথায়? মায়ের বোধন টা যে এখনো বাকি ...</p>
         </div>
       `;
-      (function startBodhonCountdown(seconds) {
-        const bnDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
-        const toBengali = (n) => String(n).replace(/\d/g, (d) => bnDigits[d]);
 
-        const timerEl = document.getElementById('stage5-bodhon-timer');
-        if (!timerEl) return;
+      const stopCountdown = startBodhonCountdown(10, actionArea, container);
 
-        let remaining = seconds;
-        timerEl.textContent = toBengali(remaining);
-
-        const intervalId = setInterval(() => {
-          // Stop if the banner was removed (e.g. the auto-navigation already happened)
-          if (!document.body.contains(timerEl) || remaining <= 1) {
-            clearInterval(intervalId);
-            if (remaining <= 1 && document.body.contains(timerEl)) {
-              timerEl.textContent = toBengali(0);
-            }
-            return;
-          }
-
-          remaining -= 1;
-          timerEl.textContent = toBengali(remaining);
-        }, 1000);
-      })(10);
-
-      // actionArea.querySelector('#stage5-continue-btn').addEventListener('click', () => {
-      //   audioManager.stopAll();
-      //   gameState.nextStage();
-      // });
       setTimeout(() => {
+        stopCountdown();
         audioManager.stopAll();
         gameState.nextStage();
       }, 10000);
