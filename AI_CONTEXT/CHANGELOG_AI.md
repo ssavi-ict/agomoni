@@ -1,6 +1,6 @@
 ## 2026-10-10 — Search Discovery Basics
 - **What changed:**
-  - Added canonical, description, Open Graph, and Twitter card metadata for `https://aviksarkar.fyi/`.
+  - Added canonical, description, Open Graph, and Twitter card metadata for `https://aviksarkar.fyi/agomoni/`.
   - Added a semantic site heading and a no-JavaScript summary.
   - Added root `robots.txt` and a one-page sitemap, plus the live site link to the repository README.
 - **Files/components affected:** `index.html`, `src/components/Header.js`, `README.md`, `public/robots.txt`, `public/sitemap.xml`, `AI_CONTEXT/CURRENT_STATE.md`, `AI_CONTEXT/TODO.md`, `AI_CONTEXT/CHANGELOG_AI.md`.
