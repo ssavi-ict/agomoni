@@ -1,40 +1,83 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Agomoni — Bringing Maa Durga Home | আগমনী</title>
   <meta name="description" content="Agomoni — Bringing Maa Durga Home. A peaceful, nostalgic, and emotional Durga Puja journey where you bring Maa Durga home." />
-  <link rel="canonical" href="https://aviksarkar.fyi/" />
+  <link rel="canonical" href="https://aviksarkar.fyi/agomoni/" />
   <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:locale" content="bn_BD" />
-  <meta property="og:url" content="https://aviksarkar.fyi/" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="bn_BD" />
+  <meta property="og:url" content="https://aviksarkar.fyi/agomoni/" />
   <meta property="og:title" content="Agomoni — Bringing Maa Durga Home | আগমনী" />
   <meta property="og:description" content="Experience a peaceful, nostalgic Durga Puja journey and help bring Maa Durga home, one stage at a time." />
-  <meta property="og:image" content="https://aviksarkar.fyi/assets/images/durga_final.png" />
+  <meta property="og:image" content="https://aviksarkar.fyi/agomoni/assets/images/durga_final.png" />
   <meta property="og:image:alt" content="Maa Durga, revealed at the end of the Agomoni journey" />
+
+  <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Agomoni — Bringing Maa Durga Home | আগমনী" />
   <meta name="twitter:description" content="Experience a peaceful, nostalgic Durga Puja journey and help bring Maa Durga home, one stage at a time." />
-  <meta name="twitter:image" content="https://aviksarkar.fyi/assets/images/durga_final.png" />
-  
+  <meta name="twitter:image" content="https://aviksarkar.fyi/agomoni/assets/images/durga_final.png" />
+
+  <!-- Structured data (not visible to users) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Agomoni — Bringing Maa Durga Home",
+    "alternateName": "আগমনী",
+    "url": "https://aviksarkar.fyi/agomoni/",
+    "description": "A peaceful, interactive Durga Puja journey where you bring Maa Durga home, one stage at a time.",
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "Any",
+    "inLanguage": ["bn", "en"],
+    "image": "https://aviksarkar.fyi/agomoni/assets/images/durga_final.png",
+    "author": { "@type": "Person", "name": "Avik Sarkar" }
+  }
+  </script>
+
   <!-- Fonts: Space Grotesk, IBM Plex Sans, IBM Plex Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-  
+
   <!-- Favicon icon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪔</text></svg>" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🪔%3C/text%3E%3C/svg%3E" />
 </head>
 <body>
+  <!--
+    Crawlable fallback text. It is in the raw HTML for crawlers and link-preview
+    tools, and the inline script below removes it before the game appears, so
+    players never see it.
+  -->
+  <div id="seo-fallback">
+    <h1>আগমনী — Bringing Maa Durga Home</h1>
+    <p>
+      Agomoni is a quiet, interactive Durga Puja experience. One stage at a
+      time, you help bring Maa Durga home, ending with her unveiling.
+      "Agomoni" (আগমনী) means "the arrival": in Bengali tradition, Agomoni
+      songs welcome Durga as she returns home from Kailash, like a daughter
+      visiting her parents for the festival.
+    </p>
+    <p lang="bn">
+      আগমনী একটি শান্ত, ইন্টারঅ্যাকটিভ দুর্গাপূজার অভিজ্ঞতা। ধাপে ধাপে আপনি
+      মা দুর্গাকে ঘরে আনবেন এবং শেষে দেখা পাবেন মায়ের।
+      "আগমনী" শব্দের অর্থ আসা বা আগমন।
+    </p>
+  </div>
+  <script>document.getElementById('seo-fallback').remove();</script>
+
   <div id="app"></div>
+
   <noscript>
-    <main>
-      <h1>আগমনী — Bringing Maa Durga Home</h1>
-      <p>A peaceful, interactive Durga Puja journey. JavaScript is required to play.</p>
-    </main>
+    <p>This experience needs JavaScript to play. · খেলাটি চালাতে JavaScript প্রয়োজন।</p>
   </noscript>
+
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>
