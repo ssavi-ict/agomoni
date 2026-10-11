@@ -15,10 +15,12 @@
 - **Audio System:** Centralized `AudioManager` with mute toggle, resilient Web Audio procedural synthesis fallbacks, and a two-second Mahalaya fade to quiet background level at Diya followed by a fade to silence at Conch.
 - **Theme:** Atmospheric Night Mode toggle with `prefers-color-scheme` support and `localStorage` persistence.
 - **State & Storage:** `agomoni-game-state` persisted to `localStorage` (currentStage, completedStages, theme, muted). Strictly completion-based.
-- **Visitor Counter:** Each stage increments the shared Firebase Realtime Database count when it is displayed, and the footer subscribes to live updates. A page visit increments once for each stage the player enters. Missing/invalid configuration or Firebase access errors fall back to `000000`.
+- **Visitor Counter:** Each stage increments the shared Firebase Realtime Database count when it is displayed, and the footer subscribes to live updates. The footer displays counts without leading zeroes (zero displays as `0`). A page visit increments once for each stage the player enters. Missing/invalid configuration or Firebase access errors fall back to zero.
 - **Deployment:** GitHub Pages workflow `.github/workflows/deploy.yml` and relative base path.
 
 ## Latest Meaningful Changes
+- Visitor counter display now omits leading zero padding while preserving the service's existing count format.
+- Restyled the live visitor counter to match the footer credit typography and added a theme-aware GitHub source link to the footer.
 - Added canonical SEO metadata, social sharing tags, a root sitemap and `robots.txt`, and a semantic brand heading for search indexing at `https://aviksarkar.fyi/agomoni/`.
 - Mahalaya now fades to a quiet background level when the first Diya is lit, continues beneath the Stage 5 sounds, then fades to silence when Conch is triggered.
 - Replaced the intro start button's unsupported arrow glyph with a CSS-drawn arrow for consistent mobile rendering.

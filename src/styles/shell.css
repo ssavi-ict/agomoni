@@ -235,20 +235,36 @@
   .theatre-footer {
     width: 95%;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.55rem;
     text-align: center;
   }
 }
 
 .visitor-counter {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  color: var(--text-secondary);
-  background: var(--bg-theatre-card);
-  padding: 0.25rem 0.65rem;
-  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.38rem 0.75rem;
+  border-radius: var(--radius-full);
+  background: var(--bg-glass);
   border: 1px solid var(--border-subtle);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  line-height: 1.2;
+}
+
+.visitor-counter-label {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.visitor-counter-value {
+  color: var(--text-highlight);
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
 }
 
 .footer-credit {
@@ -284,5 +300,34 @@
 
 .footer-credit a:hover,
 .footer-credit a:focus-visible {
+  color: var(--color-gold);
+}
+
+.footer-source {
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+}
+
+.footer-source-line {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.footer-source-label {
+  color: var(--text-muted);
+}
+
+.footer-source a {
+  color: var(--text-highlight);
+  font-weight: 600;
+  text-decoration-color: var(--color-gold);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: color var(--transition-fast);
+}
+
+.footer-source a:hover,
+.footer-source a:focus-visible {
   color: var(--color-gold);
 }
