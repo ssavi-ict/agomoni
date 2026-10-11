@@ -29,6 +29,8 @@
 - [x] Style footer credit text with accessible, theme-aware typography.
 - [x] Render the intro start-button arrow reliably across mobile browsers.
 - [x] Add canonical metadata, sitemap, robots rules, and basic social preview tags for search discovery.
+- [x] Beautify the live visitor counter and add a styled source-code link in the footer.
+- [x] Display visitor counts without leading zero padding.
 - [x] Visitor counter abstraction with placeholder implementation.
 - [x] GitHub Pages workflow (`.github/workflows/deploy.yml`) builds from `main` and publishes static output to the `deploy` branch.
 

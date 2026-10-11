@@ -1,3 +1,15 @@
+## 2026-10-11 — Visitor Counter Without Leading Zeroes
+- **What changed:** Strip leading zeroes from the displayed live visitor total, showing an all-zero fallback as `0` while retaining the service's existing formatted count values.
+- **Files/components affected:** `src/components/VisitorCounter.js`, `tests/game.test.js`, `AI_CONTEXT/CURRENT_STATE.md`, `AI_CONTEXT/TODO.md`, `AI_CONTEXT/CHANGELOG_AI.md`.
+- **Known issues:** None.
+- **Next relevant task:** None.
+
+## 2026-10-11 — Footer Counter and Source Link
+- **What changed:** Styled the live visitor count as a theme-aware footer badge and added a responsive, styled GitHub source-code link.
+- **Files/components affected:** `src/components/Footer.js`, `src/components/VisitorCounter.js`, `src/styles/shell.css`, `AI_CONTEXT/CURRENT_STATE.md`, `AI_CONTEXT/TODO.md`, `AI_CONTEXT/CHANGELOG_AI.md`.
+- **Known issues:** None.
+- **Next relevant task:** None.
+
 ## 2026-10-10 — Search Discovery Basics
 - **What changed:**
   - Added canonical, description, Open Graph, and Twitter card metadata for `https://aviksarkar.fyi/agomoni/`.

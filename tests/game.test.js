@@ -83,6 +83,7 @@ console.log('✓ Game State & Persistence tests passed');
 // 2. Test Visitor Counter Service
 console.log('2. Testing Visitor Counter Service...');
 const { visitorCounterService } = await import('../src/services/visitorCounterService.js');
+const { formatDisplayedVisitorCount } = await import('../src/components/VisitorCounter.js');
 const stageLoadCount = await visitorCounterService.recordStageLoad();
 assert.strictEqual(stageLoadCount, '000000', 'Stage entry should use the fallback if Firebase is not configured');
 const countStr = await visitorCounterService.getVisitorCount();
@@ -94,6 +95,9 @@ const unsubscribe = await visitorCounterService.subscribeVisitorCount(count => {
 });
 assert.strictEqual(subscribedCount, '000000', 'Visitor counter subscription should report its fallback when Firebase is not configured');
 assert.strictEqual(typeof unsubscribe, 'function', 'Visitor counter subscription should return an unsubscribe function');
+assert.strictEqual(formatDisplayedVisitorCount('000123'), '123', 'Displayed visitor count should omit leading zeroes');
+assert.strictEqual(formatDisplayedVisitorCount('000000'), '0', 'An all-zero visitor count should display as a single zero');
+assert.strictEqual(formatDisplayedVisitorCount('123456'), '123456', 'Visitor counts without leading zeroes should be unchanged');
 console.log(`✓ Visitor Counter returned: ${countStr}`);
 
 // 3. Test Audio Manager
